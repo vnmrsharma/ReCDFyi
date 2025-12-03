@@ -204,8 +204,10 @@ recd-platform/
 
 2. **Install dependencies**
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
+   
+   > **Note**: Use `--legacy-peer-deps` due to React 19 being newer than some peer dependencies expect.
 
 3. **Set up Firebase**
    

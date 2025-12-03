@@ -2,7 +2,7 @@
  * Email service for sending share emails via SMTP and logging to Firestore
  */
 
-import emailjs from 'emailjs-com';
+import emailjs from '@emailjs/browser';
 import {
   collection,
   doc,

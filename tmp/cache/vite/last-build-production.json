@@ -1,7 +1,7 @@
 {
   "success": true,
   "errors": "You are using Node.js 20.15.0. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.\n[plugin vite:reporter] \n(!) /Users/vin/kiroween/src/services/userService.ts is dynamically imported by /Users/vin/kiroween/src/components/user/ProfileSettings.tsx but also statically imported by /Users/vin/kiroween/src/components/user/ProfileSettings.tsx, /Users/vin/kiroween/src/contexts/AuthContext.tsx, /Users/vin/kiroween/src/pages/CreatorProfilePage.tsx, dynamic import will not move module into another chunk.\n\n\n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\n",
-  "timestamp": "2025-12-03 16:41:02",
+  "timestamp": "2025-12-03 17:38:25",
   "vite_ruby": "3.8.0",
-  "digest": "0bc5a20d5edbe8ad823eb9b66426cfd7ab6484e0"
+  "digest": "fa64df4e70272267508a069c1b2d3bb0072fda35"
 }
