@@ -1,0 +1,127 @@
+/* Footer Component - Y2K Retro Styling */
+
+.footer {
+  background: var(--bg-light);
+  border-top: 2px solid var(--border-gray);
+  padding: 12px 16px;
+  font-family: 'MS Sans Serif', Tahoma, sans-serif;
+  font-size: 10px;
+  color: var(--text-black);
+  flex-shrink: 0;
+}
+
+.footer-content {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-copyright,
+.footer-version {
+  white-space: nowrap;
+}
+
+.footer-version {
+  color: var(--text-gray);
+}
+
+.footer-nav {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.footer-link-item {
+  margin: 0;
+  padding: 0;
+}
+
+.footer-link {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: var(--transition-fast);
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+  background: rgba(0, 102, 255, 0.1);
+}
+
+.footer-link:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.footer-link:active {
+  color: var(--primary-dark-blue);
+}
+
+/* Responsive Layout - Mobile */
+@media (max-width: 600px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .footer-info {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .footer-nav {
+    justify-content: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .footer-link-item:not(:last-child)::after {
+    content: '•';
+    margin-left: 8px;
+    color: var(--text-gray);
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 601px) and (max-width: 960px) {
+  .footer-content {
+    gap: 12px;
+  }
+
+  .footer-links {
+    gap: 12px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .footer-link {
+    transition: none;
+  }
+}

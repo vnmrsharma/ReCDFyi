@@ -1,0 +1,447 @@
+/**
+ * BurningProgress component styles
+ * Retro CD burning animation with spinning disc and laser effect
+ */
+
+.burning-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+.burning-progress__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn var(--transition-slow) ease;
+}
+
+.burning-progress__modal {
+  background: var(--bg-silver);
+  border: 3px outset var(--text-white);
+  padding: 32px;
+  min-width: 400px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.burning-progress__title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 24px 0;
+  color: var(--text-black);
+  text-transform: uppercase;
+}
+
+.burning-progress__disc-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 24px;
+}
+
+.burning-progress__disc {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--accent-pink) 0%,
+    var(--accent-cyan) 25%,
+    var(--warning-yellow) 50%,
+    var(--accent-pink) 75%,
+    var(--accent-cyan) 100%
+  );
+  position: relative;
+  animation: spin 2s linear infinite;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+.burning-progress__disc-inner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-purple) 0%,
+    var(--primary-blue) 50%,
+    var(--primary-purple) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.burning-progress__disc-hole {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-silver);
+  border: 2px solid var(--text-gray);
+}
+
+.burning-progress__laser {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 60px;
+  background: var(--error-red);
+  transform-origin: top center;
+  transform: translateX(-50%) rotate(0deg);
+  animation: laser 2s linear infinite;
+  box-shadow: 0 0 10px var(--error-red);
+}
+
+.burning-progress__checkmark {
+  width: 150px;
+  height: 150px;
+  animation: scaleIn 0.5s ease-out;
+}
+
+.checkmark-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.checkmark-circle {
+  stroke: var(--success-green);
+  stroke-width: 2;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  stroke: var(--success-green);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.burning-progress__file-name {
+  font-size: 12px;
+  margin: 0 0 8px 0;
+  color: var(--text-black);
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.burning-progress__status {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+  color: var(--text-black);
+}
+
+.burning-progress__bar-container {
+  width: 100%;
+  height: 24px;
+  background: var(--text-white);
+  border: 2px inset var(--border-gray);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.burning-progress__bar-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-blue) 0%,
+    var(--accent-cyan) 100%
+  );
+  transition: width var(--transition-slow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.burning-progress__bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.burning-progress__bar-text {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--text-white);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.burning-progress__message {
+  font-size: 11px;
+  margin: 0;
+  color: var(--text-gray);
+}
+
+/* Animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes laser {
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Completion animation */
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .burning-progress__modal {
+    min-width: 350px;
+    padding: 28px;
+  }
+  
+  .burning-progress__title {
+    font-size: 15px;
+  }
+  
+  .burning-progress__disc-container {
+    width: 130px;
+    height: 130px;
+  }
+
+  .burning-progress__disc {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .burning-progress__checkmark {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 600px) {
+  .burning-progress__modal {
+    min-width: 280px;
+    max-width: 90%;
+    padding: 20px;
+  }
+  
+  .burning-progress__title {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .burning-progress__disc-container {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+
+  .burning-progress__disc {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .burning-progress__disc-inner {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+  
+  .burning-progress__disc-hole {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .burning-progress__laser {
+    height: 45px;
+  }
+  
+  .burning-progress__checkmark {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .burning-progress__bar-container {
+    height: 20px;
+  }
+  
+  .burning-progress__bar-text {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .burning-progress__modal {
+    min-width: 260px;
+    padding: 16px;
+  }
+  
+  .burning-progress__title {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  
+  .burning-progress__disc-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+  }
+
+  .burning-progress__disc {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .burning-progress__disc-inner {
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+  }
+  
+  .burning-progress__disc-hole {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .burning-progress__laser {
+    height: 35px;
+  }
+  
+  .burning-progress__checkmark {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .burning-progress__status {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .burning-progress__file-name {
+    font-size: 11px;
+  }
+  
+  .burning-progress__bar-container {
+    height: 18px;
+    margin-bottom: 12px;
+  }
+}
+
+/* Simplified animations for slow devices and reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .burning-progress__disc {
+    animation: none;
+  }
+  
+  .burning-progress__laser {
+    animation: none;
+    display: none;
+  }
+  
+  .burning-progress__bar-fill::after {
+    animation: none;
+  }
+  
+  .burning-progress__overlay {
+    animation: none;
+  }
+  
+  .burning-progress__checkmark {
+    animation: none;
+  }
+  
+  .checkmark-circle,
+  .checkmark-check {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

@@ -1,0 +1,54 @@
+/* RetroLayout styles with sticky footer pattern */
+
+.retro-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-silver) 0%, var(--gradient-silver-light) 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.retro-layout-content {
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 2);
+}
+
+.retro-layout-container {
+  width: 100%;
+  max-width: 960px;
+  background-color: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  border-style: outset;
+  box-shadow: 
+    inset -1px -1px 0 rgba(0, 0, 0, 0.25),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    2px 2px 4px rgba(0, 0, 0, 0.3);
+  padding: calc(var(--spacing-unit) * 2);
+}
+
+.retro-layout-footer {
+  flex-shrink: 0;
+}
+
+/* Responsive behavior */
+@media (max-width: 960px) {
+  .retro-layout-content {
+    padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+  }
+  
+  .retro-layout-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .retro-layout-content {
+    padding: var(--spacing-unit);
+  }
+  
+  .retro-layout-container {
+    padding: var(--spacing-unit);
+  }
+}

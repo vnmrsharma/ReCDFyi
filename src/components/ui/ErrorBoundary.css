@@ -1,0 +1,223 @@
+/**
+ * Error Boundary styles - Y2K retro aesthetic
+ */
+
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: calc(var(--spacing-unit) * 3);
+  background: var(--bg-silver);
+}
+
+.error-boundary__container {
+  max-width: 500px;
+  width: 100%;
+  background: var(--text-white);
+  border: 2px solid;
+  border-top-color: var(--border-light);
+  border-left-color: var(--border-light);
+  border-right-color: var(--border-dark);
+  border-bottom-color: var(--border-dark);
+  box-shadow: 
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.25),
+    4px 4px 8px var(--shadow-color);
+  text-align: center;
+}
+
+.error-boundary__header {
+  background: linear-gradient(90deg, var(--error-red) 0%, var(--primary-purple) 100%);
+  color: var(--text-white);
+  padding: calc(var(--spacing-unit) * 0.5) calc(var(--spacing-unit) * 2);
+  font-weight: bold;
+  font-size: 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-dark);
+}
+
+.error-boundary__body {
+  padding: calc(var(--spacing-unit) * 4);
+}
+
+.error-boundary__icon {
+  font-size: 64px;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.2));
+  animation: error-pulse 2s ease-in-out infinite;
+}
+
+@keyframes error-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.error-boundary__title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 calc(var(--spacing-unit) * 2) 0;
+  color: var(--error-red);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.error-boundary__message {
+  font-size: 12px;
+  margin: 0 0 calc(var(--spacing-unit) * 3) 0;
+  color: var(--text-black);
+  line-height: 1.6;
+}
+
+.error-boundary__actions {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 2);
+  justify-content: center;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  flex-wrap: wrap;
+}
+
+.error-boundary__button {
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+  font-size: 11px;
+  font-weight: bold;
+  font-family: "MS Sans Serif", "Tahoma", sans-serif;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 100px;
+}
+
+.error-boundary__button--primary {
+  background: var(--primary-blue);
+  color: var(--text-white);
+  border-top-color: var(--border-light);
+  border-left-color: var(--border-light);
+  border-right-color: var(--border-dark);
+  border-bottom-color: var(--border-dark);
+  box-shadow: 
+    inset 1px 1px 0 rgba(255, 255, 255, 0.4),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.4),
+    2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.error-boundary__button--primary:hover {
+  background: var(--primary-purple);
+}
+
+.error-boundary__button--primary:active {
+  box-shadow: 
+    inset -1px -1px 0 rgba(255, 255, 255, 0.4),
+    inset 1px 1px 0 rgba(0, 0, 0, 0.4);
+  transform: translate(1px, 1px);
+}
+
+.error-boundary__button--secondary {
+  background: var(--bg-silver);
+  color: var(--text-black);
+  border-top-color: var(--border-light);
+  border-left-color: var(--border-light);
+  border-right-color: var(--border-dark);
+  border-bottom-color: var(--border-dark);
+  box-shadow: 
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.25),
+    2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.error-boundary__button--secondary:hover {
+  background: var(--border-gray);
+}
+
+.error-boundary__button--secondary:active {
+  box-shadow: 
+    inset -1px -1px 0 rgba(255, 255, 255, 0.5),
+    inset 1px 1px 0 rgba(0, 0, 0, 0.25);
+  transform: translate(1px, 1px);
+}
+
+.error-boundary__details {
+  margin-top: calc(var(--spacing-unit) * 3);
+  text-align: left;
+  border: 2px solid;
+  border-top-color: var(--border-dark);
+  border-left-color: var(--border-dark);
+  border-right-color: var(--border-light);
+  border-bottom-color: var(--border-light);
+  padding: calc(var(--spacing-unit) * 2);
+  background: var(--bg-light);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.error-boundary__details summary {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: calc(var(--spacing-unit) * 1);
+  user-select: none;
+}
+
+.error-boundary__details summary:hover {
+  color: var(--primary-blue);
+}
+
+.error-boundary__stack {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: calc(var(--spacing-unit) * 1) 0 0 0;
+  padding: calc(var(--spacing-unit) * 1);
+  background: var(--text-white);
+  border: 1px solid var(--border-gray);
+  max-height: 300px;
+  overflow-y: auto;
+  color: var(--error-red);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .error-boundary {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .error-boundary__body {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .error-boundary__icon {
+    font-size: 48px;
+  }
+  
+  .error-boundary__title {
+    font-size: 14px;
+  }
+  
+  .error-boundary__message {
+    font-size: 11px;
+  }
+  
+  .error-boundary__button {
+    min-width: 80px;
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+  }
+  
+  .error-boundary__details {
+    padding: var(--spacing-unit);
+  }
+  
+  .error-boundary__stack {
+    font-size: 9px;
+    max-height: 200px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .error-boundary__icon {
+    animation: none;
+  }
+}

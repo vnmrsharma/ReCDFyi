@@ -1,0 +1,644 @@
+/**
+ * Share components styling with retro Y2K aesthetic
+ */
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal content - uses standardized container styling with enhanced shadow */
+.modal-content {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  box-shadow: 
+    inset -1px -1px 0 rgba(0, 0, 0, 0.25),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    4px 4px 12px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: auto;
+  animation: scaleIn var(--transition-normal) ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.share-modal {
+  padding: 0;
+}
+
+/* Modal header */
+.modal-header {
+  background: linear-gradient(180deg, var(--primary-blue) 0%, var(--gradient-blue-dark) 100%);
+  color: var(--text-white);
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-gray);
+}
+
+.modal-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-white);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-white);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal body */
+.modal-body {
+  padding: 16px;
+}
+
+/* Tab container */
+.tab-container {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--border-gray);
+}
+
+.tab-button {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  border-bottom: none;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  transition: background var(--transition-fast);
+}
+
+.tab-button:hover {
+  background: var(--gradient-silver-light);
+}
+
+.tab-button.active {
+  background: var(--text-white);
+  border-bottom: 2px solid var(--text-white);
+  z-index: 1;
+}
+
+/* Tab content */
+.tab-content {
+  padding: 16px 0;
+}
+
+/* Share link display */
+.share-link-display {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-link-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--text-black);
+}
+
+.share-link-container {
+  display: flex;
+  gap: 8px;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 2px solid var(--border-gray);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  background: var(--text-white);
+}
+
+.share-link-input:focus {
+  outline: 1px dotted var(--text-black);
+  outline-offset: -3px;
+}
+
+.copy-button {
+  min-width: 80px;
+}
+
+.share-link-info {
+  font-size: 10px;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* Email share form */
+.email-share-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--text-black);
+}
+
+.form-input {
+  padding: 4px 8px;
+  border: 2px solid var(--border-gray);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+  font-size: 11px;
+  background: var(--text-white);
+}
+
+.form-input:focus {
+  outline: 1px dotted var(--text-black);
+  outline-offset: -3px;
+}
+
+.form-input:disabled {
+  background: var(--bg-light);
+  color: var(--text-gray);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  line-height: 1.4;
+}
+
+.send-button {
+  align-self: flex-start;
+  min-width: 120px;
+}
+
+.email-info {
+  font-size: 10px;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* Retro button styling */
+.retro-button {
+  background: var(--bg-silver);
+  border: 2px solid;
+  border-color: var(--text-white) var(--border-gray) var(--border-gray) var(--text-white);
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.retro-button:hover:not(:disabled) {
+  background: var(--gradient-silver-light);
+}
+
+.retro-button {
+  background: var(--bg-silver);
+  border: 2px solid;
+  border-color: var(--text-white) var(--border-gray) var(--border-gray) var(--text-white);
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-fast);
+}
+
+.retro-button:hover:not(:disabled) {
+  background: var(--gradient-silver-light);
+}
+
+.retro-button:active:not(:disabled) {
+  border-color: var(--border-gray) var(--text-white) var(--text-white) var(--border-gray);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+  transform: translateY(1px);
+}
+
+.retro-button:disabled {
+  background: var(--bg-light);
+  color: var(--text-gray);
+  cursor: not-allowed;
+  border-color: var(--bg-silver) var(--gradient-silver-dark) var(--gradient-silver-dark) var(--bg-silver);
+}
+
+/* Messages */
+.error-message {
+  background: var(--toast-error-light);
+  border: 2px solid var(--error-red);
+  padding: 8px;
+  font-size: 11px;
+  color: var(--gradient-red-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.success-message {
+  background: var(--toast-success-light);
+  border: 2px solid var(--success-green);
+  padding: 8px;
+  font-size: 11px;
+  color: var(--success-green-dark);
+}
+
+.retry-button {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  margin-left: 8px;
+}
+
+.retry-button {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  margin-left: 8px;
+  transition: color var(--transition-fast);
+}
+
+.retry-button:hover {
+  color: var(--gradient-blue-dark);
+}
+
+/* Loading state */
+.loading-state {
+  text-align: center;
+  padding: 32px;
+  font-size: 11px;
+  color: var(--text-gray);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 92%;
+  }
+  
+  .modal-body {
+    padding: 12px;
+  }
+  
+  .tab-content {
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+    max-width: none;
+  }
+
+  .share-link-container {
+    flex-direction: column;
+  }
+
+  .copy-button {
+    width: 100%;
+  }
+  
+  .send-button {
+    width: 100%;
+  }
+  
+  .tab-button {
+    flex: 1;
+    padding: 10px 12px;
+  }
+}
+
+/* Bottom sheet style for mobile */
+@media (max-width: 480px) {
+  .modal-overlay {
+    align-items: flex-end;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 16px 16px 0 0;
+    border: 2px solid var(--border-gray);
+    border-bottom: none;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .modal-header {
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .modal-body {
+    padding: 16px;
+  }
+  
+  .share-link-input {
+    font-size: 10px;
+  }
+  
+  .form-input {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Touch-friendly buttons on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .retro-button {
+    min-height: 44px;
+    padding: 10px 20px;
+  }
+  
+  .tab-button {
+    min-height: 44px;
+  }
+  
+  .modal-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Simplified animations for slow devices */
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay {
+    animation: none;
+  }
+  
+  .modal-content {
+    animation: none;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes scaleIn {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 1; }
+    to { opacity: 1; }
+  }
+}
+
+/* Shared CD View */
+.shared-cd-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.shared-cd-banner {
+  background: linear-gradient(180deg, var(--primary-purple) 0%, var(--primary-blue) 100%);
+  color: var(--text-white);
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+  border: 2px solid var(--border-gray);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: calc(var(--spacing-unit) * 3);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing-unit) * 1.5);
+  font-size: 12px;
+}
+
+.banner-icon {
+  font-size: 20px;
+}
+
+.banner-text {
+  flex: 1;
+}
+
+.banner-text strong {
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.shared-cd-cta {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  padding: calc(var(--spacing-unit) * 3);
+  margin-top: calc(var(--spacing-unit) * 4);
+  text-align: center;
+}
+
+.shared-cd-cta p {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+  color: var(--text-black);
+}
+
+.shared-cd-cta .button {
+  min-width: 150px;
+}
+
+/* Error state for shared view - uses standardized container styling */
+.shared-cd-container .error-state {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 3);
+  text-align: center;
+  margin-top: calc(var(--spacing-unit) * 6);
+}
+
+.shared-cd-container .error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.shared-cd-container .error-state h2 {
+  font-size: 18px;
+  margin: 0 0 16px 0;
+  color: var(--text-black);
+}
+
+.shared-cd-container .error-state .error-message {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: var(--text-gray);
+  margin-bottom: 24px;
+  display: block;
+}
+
+.shared-cd-container .error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+/* Loading state for shared view */
+.shared-cd-container .loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  min-height: 400px;
+}
+
+.shared-cd-container .loading-spinner {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 24px;
+}
+
+.shared-cd-container .spinner-disc {
+  width: 100%;
+  height: 100%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.shared-cd-container .loading-state p {
+  font-size: 14px;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* Empty state - uses standardized container styling */
+.shared-cd-container .empty-state {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  padding: calc(var(--spacing-unit) * 6) calc(var(--spacing-unit) * 3);
+  text-align: center;
+  margin-top: calc(var(--spacing-unit) * 3);
+}
+
+.shared-cd-container .empty-state p {
+  font-size: 14px;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .shared-cd-container {
+    padding: 16px;
+  }
+
+  .shared-cd-banner {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .banner-icon {
+    font-size: 16px;
+  }
+
+  .shared-cd-cta {
+    padding: 16px;
+  }
+
+  .shared-cd-cta p {
+    font-size: 12px;
+  }
+}

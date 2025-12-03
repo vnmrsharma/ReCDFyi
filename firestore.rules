@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function hasValidShareToken(cdId) {
+      return request.query.token != null
+        && exists(/databases/$(database)/documents/shareTokens/$(request.query.token))
+        && get(/databases/$(database)/documents/shareTokens/$(request.query.token)).data.cdId == cdId 
+        && get(/databases/$(database)/documents/shareTokens/$(request.query.token)).data.expiresAt > request.time;
+    }
+    
+    // Users collection
+    // Public read access for username, usernameL, publicCDCount (for profiles and marketplace)
+    match /users/{userId} {
+      allow read: if true; // Public profiles
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+    
+    // CDs collection
+    match /cds/{cdId} {
+      // Allow public read when isPublic is true
+      allow read: if isOwner(resource.data.userId) 
+                  || hasValidShareToken(cdId)
+                  || (resource.data.isPublic == true);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isOwner(resource.data.userId);
+      
+      // Files subcollection
+      match /files/{fileId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/cds/$(cdId)).data.userId) 
+                    || hasValidShareToken(cdId)
+                    || (get(/databases/$(database)/documents/cds/$(cdId)).data.isPublic == true);
+        allow write: if isOwner(get(/databases/$(database)/documents/cds/$(cdId)).data.userId);
+      }
+    }
+    
+    // ShareTokens collection
+    match /shareTokens/{tokenId} {
+      allow read: if true; // Tokens are validated by expiration and cdId
+      allow create: if isAuthenticated() 
+                    && isOwner(get(/databases/$(database)/documents/cds/$(request.resource.data.cdId)).data.userId);
+      allow update, delete: if isOwner(resource.data.createdBy);
+    }
+    
+    // EmailLogs collection
+    match /emailLogs/{logId} {
+      allow read: if isOwner(resource.data.userId);
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(resource.data.userId);
+    }
+    
+    // Usernames collection - for uniqueness checking
+    match /usernames/{usernameL} {
+      allow read: if true; // Anyone can check username availability
+      allow create: if isAuthenticated() 
+        && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() 
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // PublicCDs collection - denormalized for marketplace performance
+    match /publicCDs/{cdId} {
+      allow read: if true; // Anyone can browse marketplace
+      // Allow CD owner to create/update/delete their public CD entries
+      allow write: if isAuthenticated() 
+        && exists(/databases/$(database)/documents/cds/$(cdId))
+        && isOwner(get(/databases/$(database)/documents/cds/$(cdId)).data.userId);
+    }
+    
+    // CDViews collection - analytics tracking
+    match /cdViews/{cdId} {
+      // Only CD owner can read analytics
+      allow read: if isAuthenticated() 
+        && isOwner(get(/databases/$(database)/documents/cds/$(cdId)).data.userId);
+      // Allow creating parent document (needed for subcollection)
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+      
+      // Viewers subcollection
+      match /viewers/{viewerId} {
+        // Owner can read all viewers
+        allow read: if isAuthenticated() 
+          && isOwner(get(/databases/$(database)/documents/cds/$(cdId)).data.userId);
+        // Authenticated users can create/update their own view record
+        allow create, update: if isAuthenticated() && request.auth.uid == viewerId;
+      }
+    }
+  }
+}

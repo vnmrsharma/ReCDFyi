@@ -1,0 +1,28 @@
+/**
+ * PageTransition styles
+ * Fade in/out animations for page navigation
+ */
+
+.page-transition {
+  opacity: 0;
+  transition: opacity var(--transition-slow) ease-in-out;
+  will-change: opacity;
+}
+
+.page-transition-visible {
+  opacity: 1;
+}
+
+/* Optional: Add slide effect for more dynamic transitions */
+.page-transition-slide {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 
+    opacity var(--transition-slow) ease-in-out,
+    transform var(--transition-slow) ease-in-out;
+}
+
+.page-transition-slide.page-transition-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

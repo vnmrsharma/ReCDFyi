@@ -1,0 +1,52 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidFileType() {
+      return request.resource.contentType.matches('image/jpeg') ||
+             request.resource.contentType.matches('image/jpg') ||
+             request.resource.contentType.matches('image/png') ||
+             request.resource.contentType.matches('audio/mp3') ||
+             request.resource.contentType.matches('audio/mpeg') ||
+             request.resource.contentType.matches('audio/wav') ||
+             request.resource.contentType.matches('video/mp4');
+    }
+    
+    function isValidFileSize() {
+      // Video files: max 5 MB, other files: max 20 MB
+      return (request.resource.contentType.matches('video/.*') && request.resource.size <= 5 * 1024 * 1024) ||
+             (!request.resource.contentType.matches('video/.*') && request.resource.size <= 20 * 1024 * 1024);
+    }
+    
+    // Helper function to check if CD is public
+    function isCDPublic(cdId) {
+      return firestore.exists(/databases/(default)/documents/cds/$(cdId)) &&
+             firestore.get(/databases/(default)/documents/cds/$(cdId)).data.isPublic == true;
+    }
+    
+    // User files: users/{userId}/cds/{cdId}/files/{fileId}
+    match /users/{userId}/cds/{cdId}/files/{fileId} {
+      // Allow read if: owner, OR CD is public (even for unauthenticated users)
+      allow read: if isOwner(userId) || isCDPublic(cdId);
+      allow write: if isOwner(userId) && isValidFileType() && isValidFileSize();
+      allow delete: if isOwner(userId);
+    }
+    
+    // Thumbnails: users/{userId}/cds/{cdId}/thumbnails/{fileId}_thumb.jpg
+    match /users/{userId}/cds/{cdId}/thumbnails/{thumbnail} {
+      // Allow read if: owner, OR CD is public (even for unauthenticated users)
+      allow read: if isOwner(userId) || isCDPublic(cdId);
+      allow write: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+  }
+}
