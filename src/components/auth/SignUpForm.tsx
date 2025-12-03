@@ -2,22 +2,27 @@
  * Sign up form component with validation
  */
 
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { EMAIL_REGEX, MIN_PASSWORD_LENGTH } from '../../utils/constants';
 import { 
   validateUsernameFormat, 
   checkUsernameAvailability,
   generateUsernameSuggestions 
 } from '../../services/validationService';
+import { LoadingOverlay } from './LoadingOverlay';
 
 interface SignUpFormProps {
   onSuccess?: () => void;
   onSwitchToLogin?: () => void;
+  animateTransition?: boolean;
 }
 
-export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
+export function SignUpForm({ onSuccess, onSwitchToLogin, animateTransition = true }: SignUpFormProps) {
   const { signUp } = useAuth();
+  const prefersReducedMotion = useReducedMotion();
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +32,15 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
   const [serverError, setServerError] = useState('');
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [usernameSuggestions, setUsernameSuggestions] = useState<string[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  // Auto-focus first input on mount
+  useEffect(() => {
+    if (emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, []);
 
   // Real-time username availability checking
   useEffect(() => {
@@ -108,12 +122,20 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
     }
 
     setErrors(newErrors);
+    
+    // Trigger error animation if validation fails
+    if (Object.keys(newErrors).length > 0) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 300);
+    }
+    
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setServerError('');
+    setShowError(false);
 
     if (!validateForm()) {
       return;
@@ -130,31 +152,48 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
           ...prev,
           username: 'This username is already taken'
         }));
+        setShowError(true);
+        setTimeout(() => setShowError(false), 300);
         setLoading(false);
         return;
       }
     } catch (error) {
       setServerError('Failed to validate username. Please try again.');
+      setShowError(true);
+      setTimeout(() => setShowError(false), 300);
       setLoading(false);
       return;
     }
 
     try {
       await signUp(email, password, username);
-      onSuccess?.();
+      
+      // Show success state before redirect
+      setShowSuccess(true);
+      setTimeout(() => {
+        onSuccess?.();
+      }, 800);
     } catch (error: any) {
       setServerError(error.message || 'Failed to create account. Please try again.');
-    } finally {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 300);
       setLoading(false);
     }
   };
 
   return (
-    <div className="signup-form-container">
+    <div className={`signup-form-container ${animateTransition && !prefersReducedMotion ? 'form-transition-enter' : ''} ${showSuccess && !prefersReducedMotion ? 'success-state' : ''}`} style={{ position: 'relative' }}>
+      {loading && <LoadingOverlay message="Creating account..." />}
       <h2>Create Account</h2>
       <form onSubmit={handleSubmit} className="auth-form">
+        {showSuccess && (
+          <div className="success-banner" role="alert">
+            Account created successfully! Redirecting...
+          </div>
+        )}
+        
         {serverError && (
-          <div className="error-banner" role="alert">
+          <div className={`error-banner ${showError && !prefersReducedMotion ? 'error-state' : ''}`} role="alert">
             {serverError}
           </div>
         )}
@@ -162,8 +201,10 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
+            ref={emailInputRef}
             id="email"
             type="email"
+            className="auth-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
@@ -182,6 +223,7 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
           <input
             id="username"
             type="text"
+            className="auth-input"
             value={username}
             onChange={(e) => setUsername(e.target.value.trim())}
             disabled={loading}
@@ -224,6 +266,7 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
           <input
             id="password"
             type="password"
+            className="auth-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
@@ -242,6 +285,7 @@ export function SignUpForm({ onSuccess, onSwitchToLogin }: SignUpFormProps) {
           <input
             id="confirmPassword"
             type="password"
+            className="auth-input"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={loading}

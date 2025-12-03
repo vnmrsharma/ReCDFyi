@@ -1,0 +1,190 @@
+/* WelcomeMessage - Retro typography with gradient effects and animations */
+
+.welcome-message {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  
+  /* Initial state for fade-in animation */
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  /* GPU acceleration hints */
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* Visible state - fade-in animation */
+.welcome-message-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Icon decoration */
+.welcome-message-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  animation: iconFloat 3s ease-in-out infinite;
+  /* GPU acceleration for smooth animation */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Headline with gradient text effect */
+.welcome-message-headline {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  
+  /* Y2K gradient text effect */
+  background: linear-gradient(
+    135deg,
+    #4a5fc1 0%,
+    #5a3a7a 50%,
+    #c76dd8 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  
+  /* Fallback for browsers that don't support background-clip - darker for better contrast */
+  color: #4a5fc1;
+}
+
+/* Subtext styling */
+.welcome-message-subtext {
+  font-size: 14px;
+  margin: 0;
+  color: #4a4a4a; /* Darker gray for better contrast - WCAG AA compliant */
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  line-height: 1.5;
+}
+
+/* Gradient animation for headline */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Floating animation for icon - GPU accelerated */
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+/* Tablet breakpoint (600px - 960px) */
+@media (max-width: 960px) and (min-width: 600px) {
+  .welcome-message {
+    margin-bottom: 20px;
+    padding: 14px;
+  }
+  
+  .welcome-message-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+  }
+  
+  .welcome-message-headline {
+    font-size: 22px;
+  }
+  
+  .welcome-message-subtext {
+    font-size: 13px;
+  }
+}
+
+/* Mobile breakpoint (< 600px) */
+@media (max-width: 600px) {
+  .welcome-message {
+    margin-bottom: 16px;
+    padding: 12px;
+  }
+  
+  .welcome-message-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+  
+  .welcome-message-headline {
+    font-size: 20px;
+  }
+  
+  .welcome-message-subtext {
+    font-size: 12px;
+  }
+}
+
+/* Reduced motion support - disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .welcome-message {
+    /* Instant appearance, no fade-in */
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition: none;
+    will-change: auto;
+  }
+  
+  .welcome-message-visible {
+    /* No transition needed */
+    transition: none;
+  }
+  
+  .welcome-message-icon {
+    /* Disable floating animation */
+    animation: none;
+  }
+  
+  .welcome-message-headline {
+    /* Disable gradient animation */
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
+/* High contrast mode - ensure readability */
+@media (prefers-contrast: high) {
+  .welcome-message-headline {
+    /* Use solid color instead of gradient */
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #000;
+  }
+  
+  .welcome-message-subtext {
+    color: #000;
+  }
+}
+
+/* Print styles - simplify for printing */
+@media print {
+  .welcome-message {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .welcome-message-icon {
+    display: none;
+  }
+  
+  .welcome-message-headline {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #000;
+    animation: none;
+  }
+}

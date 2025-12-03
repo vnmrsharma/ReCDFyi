@@ -101,13 +101,58 @@
   padding: calc(var(--spacing-unit) * 3);
 }
 
-/* Auth page */
+/* Auth page - enhanced with animated background and decorative elements */
 .auth-page {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 80vh;
   padding: calc(var(--spacing-unit) * 3);
+  overflow: hidden;
+}
+
+/* Auth form container - maintains position during transitions */
+.auth-form-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 10; /* Above background and decorative elements */
+}
+
+/* Transitioning state - fade out */
+.auth-form-container.transitioning {
+  opacity: 0.5;
+  transition: opacity 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-form-container.transitioning {
+    transition: none;
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for auth page */
+@media (max-width: 960px) {
+  .auth-form-container {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-page {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+  
+  .auth-form-container {
+    max-width: 100%;
+    width: calc(100% - calc(var(--spacing-unit) * 4));
+  }
 }
 
 /* Error pages */

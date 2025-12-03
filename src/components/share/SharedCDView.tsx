@@ -7,11 +7,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FileList } from '../cd/FileList';
 import { FilePreviewModal } from '../preview/FilePreviewModal';
+import { GuestPromptModal } from './GuestPromptModal';
 import { EmptyState } from '../ui/EmptyState';
 import { EmptyDiscIcon } from '../ui/EmptyDiscIcon';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
-import { getSharedCD } from '../../services/shareService';
-import { getFileMetadata } from '../../services/fileService';
+import { getSharedCD, getSharedCDFiles } from '../../services/shareService';
 import { ERROR_MESSAGES } from '../../utils/constants';
 import type { CD, MediaFile } from '../../types';
 import './ShareComponents.css';
@@ -28,9 +28,17 @@ export function SharedCDView() {
   const [error, setError] = useState<string | null>(null);
   const [previewFile, setPreviewFile] = useState<MediaFile | null>(null);
   const [ownerEmail, setOwnerEmail] = useState<string>('');
+  const [showGuestPrompt, setShowGuestPrompt] = useState(true);
+  const [hasAcceptedGuest, setHasAcceptedGuest] = useState(false);
 
   useEffect(() => {
-    loadSharedCD();
+    // Check if user has already accepted guest access in this session
+    const guestAccepted = sessionStorage.getItem(`guest_accepted_${token}`);
+    if (guestAccepted === 'true') {
+      setShowGuestPrompt(false);
+      setHasAcceptedGuest(true);
+      loadSharedCD();
+    }
   }, [token]);
 
   const loadSharedCD = async () => {
@@ -48,8 +56,8 @@ export function SharedCDView() {
       const cdData = await getSharedCD(token);
       setCD(cdData);
       
-      // Get files for the CD
-      const filesData = await getFileMetadata(cdData.id);
+      // Get files for the CD using the share token
+      const filesData = await getSharedCDFiles(cdData.id, token);
       setFiles(filesData);
       
       // For now, we'll show the user ID as owner info
@@ -80,6 +88,32 @@ export function SharedCDView() {
   const handleClosePreview = () => {
     setPreviewFile(null);
   };
+
+  const handleContinueAsGuest = () => {
+    setShowGuestPrompt(false);
+    setHasAcceptedGuest(true);
+    // Store in session storage so they don't see it again this session
+    if (token) {
+      sessionStorage.setItem(`guest_accepted_${token}`, 'true');
+    }
+    loadSharedCD();
+  };
+
+  // Show guest prompt first if they haven't accepted
+  if (showGuestPrompt && !hasAcceptedGuest && cd) {
+    return (
+      <>
+        <GuestPromptModal
+          isOpen={showGuestPrompt}
+          onContinueAsGuest={handleContinueAsGuest}
+          cdName={cd.name}
+        />
+        <div className="shared-cd-container">
+          <LoadingSpinner size="large" message="Loading shared CD..." />
+        </div>
+      </>
+    );
+  }
 
   if (loading) {
     return (

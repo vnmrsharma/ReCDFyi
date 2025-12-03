@@ -90,10 +90,130 @@ export const FOOTER_LINKS: FooterLink[] = [
 ];
 
 // App version information
-// App version information
-// Default values for test environments
 export const APP_VERSION = '1.0.0';
 export const BUILD_DATE = new Date().toISOString();
+
+// Auth Page Enhancement - Animation Durations (in milliseconds)
+export const ANIMATION_DURATIONS = {
+  FORM_TRANSITION: 300,
+  BUTTON_PRESS: 100,
+  SUCCESS_PULSE: 500,
+  ERROR_SHAKE: 300,
+  FADE_IN: 300,
+  BACKGROUND_GRADIENT: 15000,
+  DECORATIVE_SPIN: 10000,
+  DECORATIVE_FLOAT: 3000,
+  DECORATIVE_TWINKLE: 2000,
+} as const;
+
+// Auth Page Enhancement - Color Palette
+export const AUTH_COLORS = {
+  // Background Gradients
+  gradients: {
+    primary: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe'],
+    alternative: ['#ff6b6b', '#ee5a6f', '#c44569', '#a8e6cf', '#56ccf2'],
+    minimal: ['#e0e0e0', '#f5f5f5'],
+  },
+  // Window Chrome
+  windowChrome: {
+    titleBarStart: '#0997ff',
+    titleBarEnd: '#0053ee',
+    borderLight: '#dfdfdf',
+    borderDark: '#808080',
+    background: '#c0c0c0',
+  },
+  // Interactive States
+  interactive: {
+    focus: '#0066ff',
+    error: '#ff4444',
+    success: '#44ff44',
+    errorBackground: '#ffebee',
+    successBackground: '#e8f5e9',
+  },
+  // Text Colors
+  text: {
+    headlineStart: '#667eea',
+    headlineEnd: '#764ba2',
+    subtext: '#666666',
+    white: '#ffffff',
+  },
+} as const;
+
+// Auth Page Enhancement - Decorative Elements Configuration
+export interface DecorativeElement {
+  type: string;
+  icon: string;
+  animation: 'spin' | 'float' | 'twinkle';
+}
+
+export interface ElementPosition {
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+}
+
+export const DECORATIVE_ELEMENTS: DecorativeElement[] = [
+  { type: 'cd', icon: '💿', animation: 'spin' },
+  { type: 'note', icon: '🎵', animation: 'float' },
+  { type: 'star', icon: '⭐', animation: 'twinkle' },
+  { type: 'disc', icon: '📀', animation: 'spin' },
+];
+
+export const ELEMENT_POSITIONS: ElementPosition[] = [
+  { top: '10%', left: '5%' },
+  { top: '15%', right: '8%' },
+  { bottom: '20%', left: '10%' },
+  { bottom: '15%', right: '5%' },
+];
+
+// Auth Page Enhancement - Responsive Breakpoints
+export const AUTH_BREAKPOINTS = {
+  MOBILE: 600,
+  TABLET: 960,
+  DESKTOP: 1200,
+} as const;
+
+// Auth Page Enhancement - Window Dimensions
+export const AUTH_WINDOW_DIMENSIONS = {
+  desktop: {
+    width: 500,
+    minHeight: 400,
+    padding: 24,
+    borderWidth: 2,
+  },
+  tablet: {
+    width: 400,
+    minHeight: 380,
+    padding: 20,
+    borderWidth: 2,
+  },
+  mobile: {
+    width: 'calc(100% - 32px)',
+    minHeight: 'auto',
+    padding: 16,
+    borderWidth: 1,
+  },
+} as const;
+
+// Auth Page Enhancement - Typography
+export const AUTH_TYPOGRAPHY = {
+  headline: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  subtext: {
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+  titleBar: {
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+} as const;
+
+// Auth Page Enhancement - Touch Target Sizes (accessibility)
+export const MIN_TOUCH_TARGET_SIZE = 44; // pixels (WCAG AA standard)
 
 // Error messages
 export const ERROR_MESSAGES = {

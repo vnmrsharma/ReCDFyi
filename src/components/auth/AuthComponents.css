@@ -2,6 +2,80 @@
  * Auth components styling with responsive design
  */
 
+/* Fade-slide-in animation for form transitions - GPU accelerated */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Form transition animation */
+.form-transition-enter {
+  animation: fadeSlideIn 0.3s ease-out;
+  /* GPU acceleration hint */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-transition-enter {
+    animation: none;
+  }
+}
+
+/* Success pulse animation - GPU accelerated */
+@keyframes successPulse {
+  0%, 100% {
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale3d(1.05, 1.05, 1);
+    opacity: 0.9;
+  }
+}
+
+.success-state {
+  animation: successPulse 0.5s ease-in-out;
+  background: var(--toast-success-light);
+  border-color: var(--success-green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-state {
+    animation: none;
+  }
+}
+
+/* Error shake animation - GPU accelerated */
+@keyframes errorShake {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-10px, 0, 0);
+  }
+  75% {
+    transform: translate3d(10px, 0, 0);
+  }
+}
+
+.error-state {
+  animation: errorShake 0.3s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error-state {
+    animation: none;
+  }
+}
+
 /* Auth container */
 .auth-container {
   min-height: 100vh;
@@ -55,10 +129,54 @@
   gap: 4px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--text-black);
+}
+
 .auth-label {
   font-size: 11px;
   font-weight: bold;
   color: var(--text-black);
+}
+
+/* Error text styling for better visibility */
+.error-text {
+  font-size: 11px;
+  color: #8B0000; /* Dark red for better contrast - WCAG AA compliant */
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* Info text styling */
+.info-text {
+  font-size: 11px;
+  color: #004080; /* Dark blue for better contrast - WCAG AA compliant */
+  margin-top: 4px;
+}
+
+/* Form description text */
+.form-description {
+  font-size: 12px;
+  color: #4a4a4a; /* Dark gray for better contrast */
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* Form footer styling */
+.form-footer {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: #4a4a4a;
 }
 
 .auth-input {
@@ -68,11 +186,31 @@
   border: 2px inset var(--border-gray);
   background: var(--text-white);
   font-family: inherit;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .auth-input:focus {
-  outline: 2px solid var(--primary-blue);
+  outline: 3px solid var(--primary-blue);
   outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(9, 151, 255, 0.4);
+  border-color: var(--primary-blue);
+}
+
+/* High contrast focus indicator for better visibility */
+@media (prefers-contrast: high) {
+  .auth-input:focus {
+    outline-width: 4px;
+    outline-color: #000;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-input {
+    transition: none;
+  }
+  .auth-input:focus {
+    box-shadow: none;
+  }
 }
 
 .auth-input:disabled {
@@ -99,6 +237,47 @@
   margin-bottom: 16px;
 }
 
+/* Error banner with distinct styling */
+.error-banner {
+  background: var(--toast-error-light);
+  border: 2px solid var(--error-red);
+  border-style: inset;
+  padding: 12px;
+  font-size: 11px;
+  color: #8B0000; /* Dark red for better contrast - WCAG AA compliant */
+  margin-bottom: 16px;
+  font-weight: bold;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Success banner with distinct styling */
+.success-banner {
+  background: var(--toast-success-light);
+  border: 2px solid var(--success-green);
+  border-style: outset;
+  padding: 12px;
+  font-size: 11px;
+  color: #006400; /* Dark green for better contrast - WCAG AA compliant */
+  margin-bottom: 16px;
+  font-weight: bold;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* High contrast mode - ensure maximum readability */
+@media (prefers-contrast: high) {
+  .error-banner {
+    background: #FFF;
+    color: #000;
+    border-width: 3px;
+  }
+  
+  .success-banner {
+    background: #FFF;
+    color: #000;
+    border-width: 3px;
+  }
+}
+
 .auth-button {
   width: 100%;
   padding: 10px 16px;
@@ -107,22 +286,35 @@
   border: 2px outset var(--border-gray);
   cursor: pointer;
   font-family: inherit;
-  transition: all var(--transition-fast);
+  transition: all 0.1s ease;
   background: var(--primary-blue);
   color: var(--text-white);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .auth-button:hover:not(:disabled) {
   background: var(--gradient-blue-dark);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .auth-button:active:not(:disabled) {
   border-style: inset;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translateY(1px);
 }
 
 .auth-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-button {
+    transition: none;
+  }
+  .auth-button:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 .auth-links {
@@ -141,10 +333,17 @@
   background: none;
   border: none;
   padding: 0;
+  transition: color 0.15s ease;
 }
 
 .auth-link:hover {
   color: var(--primary-purple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-link {
+    transition: none;
+  }
 }
 
 .auth-success {
@@ -196,7 +395,8 @@
     font-size: 14px;
   }
   
-  .auth-button {
+  .auth-button,
+  .primary-button {
     padding: 12px 16px;
     font-size: 13px;
   }
@@ -229,12 +429,14 @@
     font-size: 16px; /* Prevents zoom on iOS */
   }
   
-  .auth-button {
+  .auth-button,
+  .primary-button {
     min-height: 44px;
     padding: 12px 20px;
   }
   
-  .auth-link {
+  .auth-link,
+  .link-button {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -243,12 +445,101 @@
   }
 }
 
-/* Simplified animations for slow devices */
+/* Primary button - main action button with 3D effects */
+.primary-button {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: bold;
+  border: 2px outset var(--border-gray);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.1s ease;
+  background: var(--primary-blue);
+  color: var(--text-white);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.primary-button:hover:not(:disabled) {
+  background: var(--gradient-blue-dark);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.primary-button:focus {
+  outline: 3px solid var(--text-white);
+  outline-offset: 2px;
+}
+
+.primary-button:active:not(:disabled) {
+  border-style: inset;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transform: translateY(1px);
+}
+
+.primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .auth-button {
+  .primary-button {
+    transition: none;
+  }
+  .primary-button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* High contrast focus indicator for primary buttons */
+@media (prefers-contrast: high) {
+  .primary-button:focus {
+    outline-width: 4px;
+    outline-color: #000;
+  }
+}
+
+/* Link button - text button that looks like a link */
+.link-button {
+  font-size: 11px;
+  color: var(--primary-blue);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.15s ease;
+  font-family: inherit;
+}
+
+.link-button:hover:not(:disabled) {
+  color: var(--primary-purple);
+}
+
+.link-button:focus {
+  outline: 3px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.link-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-button {
     transition: none;
   }
 }
+
+/* High contrast focus indicator for link buttons */
+@media (prefers-contrast: high) {
+  .link-button:focus {
+    outline-width: 4px;
+    outline-color: #000;
+  }
+}
+
+/* Simplified animations for slow devices - handled in button styles above */
 
 /* Username Prompt Modal */
 .username-prompt-modal {

@@ -153,27 +153,37 @@ export async function validateShareToken(
 /**
  * Retrieves a CD using a valid share token
  * @param token - The share token
- * @returns Promise resolving to the CD data
+ * @returns Promise resolving to the CD data and validation info
  * @throws {Error} If token is invalid or CD doesn't exist
  */
-export async function getSharedCD(token: string): Promise<CD> {
+export async function getSharedCD(token: string): Promise<CD & { tokenValid: boolean }> {
   try {
-    // Validate token
+    // Validate token first
     const validation = await validateShareToken(token);
     
     if (!validation.valid || !validation.cdId) {
       throw new Error(ERROR_MESSAGES.SHARE_TOKEN_INVALID);
     }
     
-    // Increment access count
-    if (validation.tokenId) {
-      const tokenRef = doc(db, COLLECTIONS.SHARE_TOKENS, validation.tokenId);
-      await updateDoc(tokenRef, {
-        accessCount: increment(1),
-      });
+    // Get the token document to access CD data
+    const tokensRef = collection(db, COLLECTIONS.SHARE_TOKENS);
+    const q = query(tokensRef, where('token', '==', token));
+    const tokenSnapshot = await getDocs(q);
+    
+    if (tokenSnapshot.empty) {
+      throw new Error(ERROR_MESSAGES.SHARE_TOKEN_INVALID);
     }
     
-    // Retrieve CD
+    const tokenDoc = tokenSnapshot.docs[0];
+    const tokenData = tokenDoc.data();
+    
+    // Increment access count
+    await updateDoc(tokenDoc.ref, {
+      accessCount: increment(1),
+    });
+    
+    // Retrieve CD - Since we validated the token, we can access the CD data
+    // The security rules allow access through shareTokens collection
     const cdRef = doc(db, COLLECTIONS.CDS, validation.cdId);
     const cdSnap = await getDoc(cdRef);
     
@@ -186,7 +196,7 @@ export async function getSharedCD(token: string): Promise<CD> {
     return {
       id: cdSnap.id,
       userId: cdData.userId,
-      username: cdData.username || '', // Default empty for backward compatibility
+      username: cdData.username || '',
       name: cdData.name,
       label: cdData.label,
       createdAt: cdData.createdAt.toDate(),
@@ -194,12 +204,17 @@ export async function getSharedCD(token: string): Promise<CD> {
       storageUsedBytes: cdData.storageUsedBytes,
       storageLimitBytes: cdData.storageLimitBytes,
       fileCount: cdData.fileCount,
-      isPublic: cdData.isPublic || false, // Default to private
+      isPublic: cdData.isPublic || false,
       publicAt: cdData.publicAt?.toDate() || undefined,
       viewCount: cdData.viewCount || 0,
+      tokenValid: true,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error getting shared CD:', error);
+    // Provide more specific error messages
+    if (error.code === 'permission-denied') {
+      throw new Error('Unable to access this CD. The share link may have expired or been revoked.');
+    }
     throw error;
   }
 }
@@ -234,6 +249,52 @@ export async function getCDShareTokens(cdId: string, userId: string): Promise<Sh
     });
   } catch (error) {
     console.error('Error getting CD share tokens:', error);
+    throw error;
+  }
+}
+
+/**
+ * Gets file metadata for a shared CD using a valid token
+ * This bypasses normal auth requirements by validating the share token first
+ * @param cdId - The CD ID
+ * @param token - The share token
+ * @returns Promise resolving to array of MediaFile metadata
+ * @throws {Error} If token is invalid or file retrieval fails
+ */
+export async function getSharedCDFiles(cdId: string, token: string): Promise<any[]> {
+  try {
+    // Validate token first
+    const validation = await validateShareToken(token);
+    
+    if (!validation.valid || validation.cdId !== cdId) {
+      throw new Error(ERROR_MESSAGES.SHARE_TOKEN_INVALID);
+    }
+    
+    // Access files through the validated token
+    // Since the token is valid, we can access the files
+    const filesCollectionRef = collection(db, COLLECTIONS.CDS, cdId, COLLECTIONS.FILES);
+    const querySnapshot = await getDocs(filesCollectionRef);
+    
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        cdId: data.cdId,
+        filename: data.filename,
+        originalName: data.originalName,
+        fileType: data.fileType,
+        mimeType: data.mimeType,
+        sizeBytes: data.sizeBytes,
+        storagePath: data.storagePath,
+        uploadedAt: data.uploadedAt?.toDate ? data.uploadedAt.toDate() : new Date(),
+        thumbnailPath: data.thumbnailPath,
+      };
+    });
+  } catch (error: any) {
+    console.error('Error getting shared CD files:', error);
+    if (error.code === 'permission-denied') {
+      throw new Error('Unable to access files for this CD. The share link may have expired.');
+    }
     throw error;
   }
 }

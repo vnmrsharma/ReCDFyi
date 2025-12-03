@@ -642,3 +642,106 @@
     font-size: 12px;
   }
 }
+
+/* Guest Prompt Modal */
+.guest-prompt-modal {
+  max-width: 500px;
+  text-align: center;
+}
+
+.guest-prompt-icon {
+  font-size: 64px;
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.guest-prompt-message {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: calc(var(--spacing-unit) * 3);
+  color: var(--text-black);
+}
+
+.guest-prompt-message strong {
+  color: var(--primary-blue);
+}
+
+.guest-prompt-benefits {
+  background: var(--bg-light);
+  border: 2px solid var(--border-gray);
+  padding: calc(var(--spacing-unit) * 2.5);
+  margin-bottom: calc(var(--spacing-unit) * 3);
+  text-align: left;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.guest-prompt-benefits h3 {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary-blue);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  text-transform: uppercase;
+}
+
+.guest-prompt-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guest-prompt-benefits li {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-black);
+  padding-left: calc(var(--spacing-unit) * 0.5);
+  margin-bottom: calc(var(--spacing-unit) * 0.75);
+}
+
+.guest-prompt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing-unit) * 1.5);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.guest-prompt-actions .button {
+  width: 100%;
+}
+
+.guest-prompt-note {
+  font-size: 12px;
+  color: var(--text-gray);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .guest-prompt-modal {
+    max-width: 95%;
+  }
+
+  .guest-prompt-icon {
+    font-size: 48px;
+  }
+
+  .guest-prompt-benefits {
+    padding: calc(var(--spacing-unit) * 2);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .guest-prompt-icon {
+    animation: none;
+  }
+}

@@ -1,0 +1,190 @@
+/* AnimatedBackground Component Styles */
+
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  /* GPU acceleration hint for animated backgrounds */
+  will-change: background-position;
+  /* Use hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Contain layout and paint to minimize repaints */
+  contain: layout paint;
+}
+
+/* Gradient Variant - Animated multi-color gradients */
+.animated-background-gradient {
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #00f2fe 100%
+  );
+  background-size: 400% 400%;
+}
+
+.animated-background-gradient.animated-background-active {
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Geometric Variant - Subtle geometric patterns with movement */
+.animated-background-geometric {
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 50%,
+    #f093fb 100%
+  );
+  position: relative;
+}
+
+.geometric-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.geometric-shape {
+  position: absolute;
+  opacity: 0.1;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  /* GPU acceleration for animated shapes */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.geometric-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  top: 10%;
+  left: 10%;
+}
+
+.geometric-square {
+  width: 150px;
+  height: 150px;
+  top: 60%;
+  right: 15%;
+  transform: rotate(45deg);
+}
+
+.geometric-triangle {
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-bottom: 173px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.animated-background-geometric.animated-background-active .geometric-circle {
+  animation: floatShape 8s ease-in-out infinite;
+}
+
+.animated-background-geometric.animated-background-active .geometric-square {
+  animation: rotateShape 12s linear infinite;
+}
+
+.animated-background-geometric.animated-background-active .geometric-triangle {
+  animation: floatShape 10s ease-in-out infinite reverse;
+}
+
+/* Use transform for GPU acceleration */
+@keyframes floatShape {
+  0%, 100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  50% {
+    transform: translate3d(-50%, -30px, 0);
+  }
+}
+
+/* Use transform3d for GPU acceleration */
+@keyframes rotateShape {
+  from {
+    transform: rotate3d(0, 0, 1, 45deg);
+  }
+  to {
+    transform: rotate3d(0, 0, 1, 405deg);
+  }
+}
+
+/* Minimal Variant - Static gradient for reduced motion */
+.animated-background-minimal {
+  background: linear-gradient(
+    135deg,
+    #e0e0e0 0%,
+    #f5f5f5 50%,
+    #e8e8e8 100%
+  );
+}
+
+/* Static fallback - no animations */
+.animated-background-static {
+  background-size: 100% 100% !important;
+}
+
+.animated-background-static .geometric-shape {
+  animation: none !important;
+}
+
+/* Reduced motion media query - disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .animated-background-gradient {
+    animation: none !important;
+    background-size: 100% 100%;
+    background-position: 0% 50%;
+  }
+
+  .geometric-shape {
+    animation: none !important;
+  }
+}
+
+/* Ensure content remains readable */
+.animated-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
+}
+
+/* Mobile optimization - simpler backgrounds */
+@media (max-width: 600px) {
+  .animated-background-gradient {
+    background-size: 200% 200%;
+  }
+
+  .geometric-shape {
+    opacity: 0.05;
+  }
+}

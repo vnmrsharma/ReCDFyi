@@ -7,6 +7,34 @@
   flex-direction: column;
 }
 
+/* Skip link for keyboard navigation - hidden until focused */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-blue);
+  color: var(--text-white);
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10000;
+  border: 2px solid var(--text-white);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--text-white);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 .retro-layout-content {
   flex: 1 0 auto;
   display: flex;

@@ -2,11 +2,12 @@
  * Main application component with routing configuration
  */
 
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { CDProvider } from './contexts/CDContext';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
 import { PublicRoute } from './components/routing/PublicRoute';
+import { LandingPage } from './pages/LandingPage';
 import { AuthPage } from './pages/AuthPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { CDDetailPage } from './pages/CDDetailPage';
@@ -15,6 +16,10 @@ import { MarketplacePage } from './pages/MarketplacePage';
 import { PublicCDViewPage } from './pages/PublicCDViewPage';
 import { CreatorProfilePage } from './pages/CreatorProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
+import { AboutPage } from './pages/AboutPage';
+import { HelpPage } from './pages/HelpPage';
+import { PrivacyPage } from './pages/PrivacyPage';
+import { TermsPage } from './pages/TermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import './App.css';
 
@@ -27,8 +32,14 @@ function App() {
       <AuthProvider>
         <CDProvider>
           <Routes>
-            {/* Root redirect to collection */}
-            <Route path="/" element={<Navigate to="/collection" replace />} />
+            {/* Landing page - public */}
+            <Route path="/" element={<LandingPage />} />
+
+            {/* Info pages - public */}
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/help" element={<HelpPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
 
             {/* Public auth route - redirects to collection if authenticated */}
             <Route

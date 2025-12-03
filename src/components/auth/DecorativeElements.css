@@ -1,0 +1,104 @@
+/* Decorative Elements Container */
+.decorative-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  /* Contain layout and paint to minimize repaints */
+  contain: layout paint;
+}
+
+/* Individual Decorative Element */
+.decorative-element {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.6;
+  user-select: none;
+  pointer-events: none;
+  /* GPU acceleration for animations */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Spin Animation - for CD and disc icons - GPU accelerated */
+@keyframes spin {
+  from {
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+  to {
+    transform: rotate3d(0, 0, 1, 360deg);
+  }
+}
+
+.decorative-element-spin {
+  animation: spin 10s linear infinite;
+}
+
+/* Float Animation - for musical notes - GPU accelerated */
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -20px, 0);
+  }
+}
+
+.decorative-element-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Twinkle Animation - for stars */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.decorative-element-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Static fallback for reduced motion */
+.decorative-element-static {
+  animation: none;
+  opacity: 0.4;
+}
+
+/* Reduced motion media query - disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .decorative-element-spin,
+  .decorative-element-float,
+  .decorative-element-twinkle {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+
+/* Hide on mobile devices */
+@media (max-width: 768px) {
+  .decorative-elements {
+    display: none;
+  }
+}
+
+/* Adjust size on smaller desktop screens */
+@media (max-width: 1200px) {
+  .decorative-element {
+    font-size: 1.5rem;
+  }
+}
+
+/* Adjust opacity on tablet */
+@media (min-width: 600px) and (max-width: 960px) {
+  .decorative-element {
+    opacity: 0.4;
+  }
+}

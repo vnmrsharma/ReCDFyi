@@ -2,27 +2,42 @@
  * Login form component with error handling
  */
 
-import React, { useState, FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { EMAIL_REGEX } from '../../utils/constants';
+import { LoadingOverlay } from './LoadingOverlay';
 
 interface LoginFormProps {
   onSuccess?: () => void;
   onSwitchToSignUp?: () => void;
   onForgotPassword?: () => void;
+  animateTransition?: boolean;
 }
 
 export function LoginForm({
   onSuccess,
   onSwitchToSignUp,
   onForgotPassword,
+  animateTransition = true,
 }: LoginFormProps) {
   const { login } = useAuth();
+  const prefersReducedMotion = useReducedMotion();
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  // Auto-focus first input on mount
+  useEffect(() => {
+    if (emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, []);
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -40,12 +55,20 @@ export function LoginForm({
     }
 
     setErrors(newErrors);
+    
+    // Trigger error animation if validation fails
+    if (Object.keys(newErrors).length > 0) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 300);
+    }
+    
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setServerError('');
+    setShowError(false);
 
     if (!validateForm()) {
       return;
@@ -55,20 +78,33 @@ export function LoginForm({
 
     try {
       await login(email, password);
-      onSuccess?.();
+      
+      // Show success state before redirect
+      setShowSuccess(true);
+      setTimeout(() => {
+        onSuccess?.();
+      }, 800);
     } catch (error: any) {
       setServerError(error.message || 'Failed to log in. Please try again.');
-    } finally {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 300);
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-form-container">
+    <div className={`login-form-container ${animateTransition && !prefersReducedMotion ? 'form-transition-enter' : ''} ${showSuccess && !prefersReducedMotion ? 'success-state' : ''}`} style={{ position: 'relative' }}>
+      {loading && <LoadingOverlay message="Logging in..." />}
       <h2>Log In</h2>
       <form onSubmit={handleSubmit} className="auth-form">
+        {showSuccess && (
+          <div className="success-banner" role="alert">
+            Login successful! Redirecting...
+          </div>
+        )}
+        
         {serverError && (
-          <div className="error-banner" role="alert">
+          <div className={`error-banner ${showError && !prefersReducedMotion ? 'error-state' : ''}`} role="alert">
             {serverError}
           </div>
         )}
@@ -76,8 +112,10 @@ export function LoginForm({
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
+            ref={emailInputRef}
             id="email"
             type="email"
+            className="auth-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
@@ -96,6 +134,7 @@ export function LoginForm({
           <input
             id="password"
             type="password"
+            className="auth-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}

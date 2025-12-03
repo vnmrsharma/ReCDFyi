@@ -307,22 +307,22 @@ select.error:focus {
 /* Button variants */
 .button-primary {
   background: linear-gradient(180deg, var(--primary-blue) 0%, #0052cc 100%);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 .button-secondary {
   background: linear-gradient(180deg, var(--bg-silver) 0%, #a0a0a0 100%);
-  color: var(--text-black);
+  color: var(--text-black) !important;
 }
 
 .button-danger {
   background: linear-gradient(180deg, var(--error-red) 0%, #cc0000 100%);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 .button-success {
   background: linear-gradient(180deg, var(--gradient-green) 0%, var(--gradient-green-dark) 100%);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 /* Button sizes */

@@ -19,6 +19,21 @@
 
 ---
 
+## � Wbhat's New (Latest Update)
+
+Just shipped some major improvements:
+
+- **🏠 Landing Page**: Beautiful welcome page that actually explains what ReCd is
+- **📄 Complete Info Pages**: About, Help, Privacy Policy, and Terms of Service
+- **💬 Guest Welcome Modal**: First-time visitors get a friendly prompt to sign up (or skip and continue)
+- **🔗 Fixed Share Links**: Shared CDs now work perfectly for guests
+- **🎨 Better Button Contrast**: All buttons now have proper text colors for readability
+- **♿ Improved Accessibility**: Better keyboard navigation and screen reader support
+
+The app is now fully production-ready with all the legal pages and user flows polished!
+
+---
+
 ## 🎯 About The Project
 
 Remember the days when you'd carefully select songs, burn them onto a CD, design custom cover art, and share your creation with friends? **ReCd(fyi)** brings back that nostalgic experience in a modern, digital format.
@@ -36,18 +51,30 @@ ReCd(fyi) embraces the visual language of early 2000s CD burning software with:
 
 ### ✨ Key Features
 
-- **🔥 Virtual CD Burning**: Upload media files with authentic burning animations
-- **📀 20MB Limit**: Just like real CDs, encouraging thoughtful curation
-- **🔗 Easy Sharing**: Share via email or generate shareable links
-- **👥 Public Marketplace**: Discover and download CDs shared by the community
-- **⏰ Time-Limited Shares**: 30-day expiration for shared links
-- **🎭 Guest Access**: Recipients don't need accounts to view shared CDs
-- **👤 Creator Profiles**: Showcase your public CD collection
-- **📊 Analytics**: Track views and downloads of your shared CDs
-- **🎵 Media Preview**: Built-in audio, video, and image viewers
-- **📦 Batch Download**: Download entire CDs as ZIP files
-- **🔒 Privacy Controls**: Toggle CDs between public and private
-- **📱 Fully Responsive**: Works seamlessly on mobile, tablet, and desktop
+#### Core Experience
+- **� V0irtual CD Burning**: Upload media files with authentic burning animations that'll take you right back to 2003
+- **� 20MB SLimit**: Just like real CDs—forces you to actually think about what matters
+- **🎨 Y2K Aesthetic**: Spinning CDs, 3D buttons, gradient backgrounds, and that sweet Windows XP vibe
+
+#### Sharing & Discovery
+- **�  Easy Sharing**: Share via email or copy a link—no complicated steps
+- **🎭 Guest Access**: Your friends don't need to sign up to view your CDs (but we'll gently encourage them)
+- **⏰ 30-Day Links**: Shared links expire after a month, keeping things fresh
+- **� Putblic Marketplace**: Browse CDs from other creators and discover new music
+- **�  Creator Profiles**: Build your collection and show off your taste
+
+#### User Experience
+- **🎵 Media Preview**: Play audio, watch videos, view images—all built-in
+- **📦 ZIP Downloads**: Grab entire CDs in one click
+- **🔒 Privacy Controls**: Keep CDs private or share them with the world
+- **📱 Fully Responsive**: Works great on your phone, tablet, or desktop
+- **♿ Accessible**: Keyboard navigation, screen reader support, reduced motion options
+
+#### New Features (Latest Update)
+- **🏠 Landing Page**: Beautiful intro page that explains what ReCd is all about
+- **📄 Info Pages**: Complete About, Help, Privacy, and Terms pages
+- **💬 Guest Prompt**: First-time visitors get a friendly welcome with option to sign up or continue as guest
+- **🎯 Better Sharing**: Fixed share link routing and improved guest access flow
 
 ---
 
@@ -145,13 +172,19 @@ recd-platform/
 │   │   ├── useReducedMotion.ts
 │   │   └── useToast.ts
 │   ├── pages/              # Route components
+│   │   ├── LandingPage.tsx      # NEW: Welcome page
 │   │   ├── AuthPage.tsx
 │   │   ├── CollectionPage.tsx
 │   │   ├── CDDetailPage.tsx
+│   │   ├── SharedCDPage.tsx
 │   │   ├── MarketplacePage.tsx
 │   │   ├── PublicCDViewPage.tsx
 │   │   ├── CreatorProfilePage.tsx
 │   │   ├── SettingsPage.tsx
+│   │   ├── AboutPage.tsx        # NEW: About us
+│   │   ├── HelpPage.tsx         # NEW: Help & FAQ
+│   │   ├── PrivacyPage.tsx      # NEW: Privacy policy
+│   │   ├── TermsPage.tsx        # NEW: Terms of service
 │   │   └── NotFoundPage.tsx
 │   ├── utils/              # Utility functions
 │   │   ├── constants.ts
@@ -187,12 +220,16 @@ recd-platform/
 
 ## 🚀 Getting Started
 
+Want to run ReCd locally? Here's how to get it up and running in about 10 minutes.
+
 ### Prerequisites
 
-- **Node.js** 18.x or higher
-- **npm** 9.x or higher
-- **Firebase CLI** (install globally: `npm install -g firebase-tools`)
-- **Firebase Project** (create at [console.firebase.google.com](https://console.firebase.google.com))
+You'll need these installed on your machine:
+
+- **Node.js** 18.x or higher (check with `node --version`)
+- **npm** 9.x or higher (comes with Node)
+- **Firebase CLI** - Install it globally: `npm install -g firebase-tools`
+- **Firebase Project** - Create one at [console.firebase.google.com](https://console.firebase.google.com) (it's free!)
 
 ### Installation
 
@@ -211,34 +248,38 @@ recd-platform/
 
 3. **Set up Firebase**
    
-   Create a Firebase project and enable:
-   - Authentication (Email/Password)
-   - Firestore Database
-   - Cloud Storage
+   In your Firebase console, enable these services:
+   - **Authentication** → Email/Password provider
+   - **Firestore Database** → Start in test mode (we'll deploy rules later)
+   - **Cloud Storage** → Start in test mode
 
 4. **Configure environment variables**
    
-   Copy the example file and configure:
+   Copy the example file:
    ```bash
    cp .env.example .env.local
    ```
    
-   Edit `.env.local` with your values:
+   Then grab your Firebase config from Project Settings → General → Your apps → Web app.
+   
+   Edit `.env.local` with your actual values:
    ```env
-   # Firebase Configuration
-   VITE_FIREBASE_API_KEY=your_api_key
-   VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   VITE_FIREBASE_PROJECT_ID=your_project_id
-   VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
-   VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-   VITE_FIREBASE_APP_ID=your_app_id
+   # Firebase Configuration (get these from Firebase console)
+   VITE_FIREBASE_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-project.firebasestorage.app
+   VITE_FIREBASE_MESSAGING_SENDER_ID=123456789012
+   VITE_FIREBASE_APP_ID=1:123456789012:web:abcdef123456
 
-   # EmailJS Configuration (for email sharing)
-   # Sign up at https://www.emailjs.com/
+   # EmailJS Configuration (optional - for email sharing feature)
+   # Sign up at https://www.emailjs.com/ - it's free for 200 emails/month
    VITE_EMAILJS_SERVICE_ID=service_xxx
    VITE_EMAILJS_TEMPLATE_ID=template_xxx
-   VITE_EMAILJS_PUBLIC_KEY=your_key
+   VITE_EMAILJS_PUBLIC_KEY=your_public_key
    ```
+   
+   > **Note**: EmailJS is optional. If you skip it, email sharing won't work but everything else will.
 
 5. **Deploy Firebase security rules**
    ```bash
@@ -246,61 +287,61 @@ recd-platform/
    firebase deploy --only firestore:rules,storage:rules
    ```
 
-6. **Start development server**
+6. **Start the app**
+   
+   You'll need two terminal windows:
+   
+   **Terminal 1** - Firebase Emulators (local database):
    ```bash
-   # Terminal 1: Start Firebase Emulators
    firebase emulators:start
-
-   # Terminal 2: Start Vite dev server
+   ```
+   
+   **Terminal 2** - Development server:
+   ```bash
    npm run dev
    ```
 
-7. **Open your browser**
-   - App: http://localhost:5173
-   - Firebase Emulator UI: http://localhost:4000
+7. **Open your browser and start burning CDs!**
+   - **App**: http://localhost:5173
+   - **Firebase Emulator UI**: http://localhost:4000 (to peek at the database)
+   
+   The app will hot-reload as you make changes. Pretty neat!
 
 ---
 
 ## 🧪 Testing
 
-ReCd(fyi) includes a comprehensive test suite with **80%+ code coverage**.
+I am testing seriously here. ReCd has **80%+ code coverage** with multiple types of tests.
 
-### Test Types
+### What's Tested
 
-1. **Unit Tests** - Component and service testing
-2. **Property-Based Tests** - Validation and business logic
-3. **Integration Tests** - End-to-end user flows
-4. **Security Rules Tests** - Firebase security validation
+I have got tests for pretty much everything:
+- ✅ **Authentication** - Sign up, login, password reset
+- ✅ **CD Management** - Create, edit, delete, share
+- ✅ **File Operations** - Upload, download, preview, validation
+- ✅ **Sharing** - Token generation, guest access, expiration
+- ✅ **Marketplace** - Public CDs, search, filtering
+- ✅ **User Profiles** - Username changes, public collections
+- ✅ **Security Rules** - Who can access what
+- ✅ **Error Handling** - What happens when things go wrong
+- ✅ **Responsive Design** - Mobile, tablet, desktop
 
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (quick)
 npm test
 
-# Run tests in watch mode
+# Watch mode (runs tests as you code)
 npm run test:watch
 
-# Run with coverage report
+# Full coverage report (see what's not tested)
 npm run test:coverage
 
-# Run security rules tests only
+# Just the security rules
 npm run test:security
 ```
 
-### Test Coverage
-
-- ✅ Authentication flows
-- ✅ CD creation and management
-- ✅ File upload and validation
-- ✅ Sharing and access control
-- ✅ Public marketplace
-- ✅ User profiles
-- ✅ Responsive behavior
-- ✅ Error handling
-- ✅ Security rules
-
----
 
 ## 📊 Architecture
 
@@ -398,172 +439,177 @@ Security is enforced at the database level using Firebase Security Rules:
 - ✅ File uploads are validated (type, size)
 - ✅ Rate limiting on sensitive operations
 
----
-
-## 🎨 Design System
-
-### Color Palette
-
-```css
-/* Primary Colors */
---primary-blue: #0066FF;
---primary-purple: #9966FF;
---primary-dark-blue: #0052CC;
-
-/* Accent Colors */
---accent-cyan: #00FFFF;
---accent-pink: #FF66FF;
-
-/* Background Colors */
---bg-silver: #C0C0C0;
---bg-light: #E0E0E0;
---bg-dark: #000080;
-
-/* Text Colors */
---text-black: #000000;
---text-white: #FFFFFF;
---text-gray: #808080;
-
-/* Border Colors */
---border-gray: #808080;
---border-light: #FFFFFF;
---border-dark: #000000;
-```
-
-### Typography
-
-- **Primary Font**: MS Sans Serif, Tahoma, sans-serif
-- **Monospace Font**: Courier New, monospace
-- **Base Size**: 14px
-- **Heading Sizes**: 16px - 32px
-
-### Spacing System
-
-Based on 8px grid:
-- XS: 4px (0.5x)
-- S: 8px (1x)
-- M: 16px (2x)
-- L: 24px (3x)
-- XL: 32px (4x)
-
-### Responsive Breakpoints
-
-- **Mobile**: < 600px
-- **Tablet**: 600px - 960px
-- **Desktop**: > 960px
-
----
-
-## 🔒 Security
+Security isn't just a feature—it's baked into every layer.
 
 ### Authentication
-- Email/password authentication via Firebase Auth
-- Secure session management
-- Password reset functionality
+- **Firebase Auth** handles all the heavy lifting
+- Passwords are hashed and never stored in plain text
+- Sessions expire automatically for safety
+- Password reset via email (no security questions from 2003)
 
-### Data Protection
-- Firestore Security Rules enforce access control
-- Storage Rules validate file uploads
-- Share tokens expire after 30 days
-- Rate limiting on sensitive operations
+### Access Control
+- **Firestore Security Rules** enforce who can see what at the database level
+- Private CDs are locked down—only you can access them
+- Public CDs are readable by anyone (that's the point)
+- Share tokens grant temporary guest access (30 days max)
+- Even if someone guesses a CD ID, they can't access it without permission
 
-### File Validation
-- File type whitelist (images, audio, video, documents)
-- 20MB total size limit per CD
-- Individual file size limits
-- Malicious file detection
+### File Safety
+- **Strict file type validation**: Only images, audio, video allowed
+- **Size limits**: 20MB per CD total, reasonable limits per file
+- **Storage Rules** double-check everything before accepting uploads
+- Malicious files get rejected before they touch our servers
 
-### Privacy
-- Private CDs are only accessible to owner
-- Public CDs are discoverable in marketplace
-- Share tokens provide temporary guest access
-- User data is never shared with third parties
+### Privacy Promise
+- Your data is yours—we never sell or share it
+- Private CDs stay private unless you explicitly share them
+- Guest access is read-only (they can view, not modify)
+- Email addresses are only used for auth and sharing (no spam)
+- You can delete your account and all data anytime
+
+### What We Track
+- **Analytics**: View counts on public CDs (helps creators)
+- **Share tokens**: Who accessed what and when (for debugging)
+- **Email logs**: Success/failure of share emails (troubleshooting)
+- **That's it**: No tracking pixels, no third-party analytics, no creepy stuff
 
 ---
 
 ## 🌐 Deployment
 
-### Frontend (Vercel)
+Ready to ship it to production? Here's how.
 
-1. **Connect repository to Vercel**
-   ```bash
-   vercel
+### Quick Deploy (Vercel + Firebase)
+
+**Step 1: Deploy the Frontend**
+
+1. Push your code to GitHub (or GitLab, Bitbucket)
+
+2. Go to [vercel.com](https://vercel.com) and import your repo
+
+3. Add environment variables in Vercel dashboard:
+   ```
+   VITE_FIREBASE_API_KEY
+   VITE_FIREBASE_AUTH_DOMAIN
+   VITE_FIREBASE_PROJECT_ID
+   VITE_FIREBASE_STORAGE_BUCKET
+   VITE_FIREBASE_MESSAGING_SENDER_ID
+   VITE_FIREBASE_APP_ID
+   VITE_EMAILJS_SERVICE_ID (optional)
+   VITE_EMAILJS_TEMPLATE_ID (optional)
+   VITE_EMAILJS_PUBLIC_KEY (optional)
    ```
 
-2. **Configure environment variables** in Vercel dashboard
+4. Click Deploy—Vercel handles the rest
 
-3. **Deploy**
-   ```bash
-   vercel --prod
-   ```
+**Step 2: Deploy Firebase Rules**
 
-### Backend (Firebase)
+Your database needs security rules in production:
 
-1. **Deploy security rules**
-   ```bash
-   firebase deploy --only firestore:rules,storage:rules
-   ```
+```bash
+# Make sure you're logged in
+firebase login
 
-2. **Deploy indexes** (if needed)
-   ```bash
-   firebase deploy --only firestore:indexes
-   ```
+# Deploy the security rules
+firebase deploy --only firestore:rules,storage:rules
 
-### Environment Variables
+# If you have custom indexes
+firebase deploy --only firestore:indexes
+```
 
-Set these in Vercel dashboard:
-- `VITE_FIREBASE_API_KEY`
-- `VITE_FIREBASE_AUTH_DOMAIN`
-- `VITE_FIREBASE_PROJECT_ID`
-- `VITE_FIREBASE_STORAGE_BUCKET`
-- `VITE_FIREBASE_MESSAGING_SENDER_ID`
-- `VITE_FIREBASE_APP_ID`
-- `VITE_EMAILJS_SERVICE_ID`
-- `VITE_EMAILJS_TEMPLATE_ID`
-- `VITE_EMAILJS_PUBLIC_KEY`
+**Step 3: Update Firebase Auth Domain**
 
----
+In Firebase Console → Authentication → Settings → Authorized domains:
+- Add your Vercel domain (e.g., `your-app.vercel.app`)
+- Add your custom domain if you have one
 
-## 📈 Performance
+### Manual Deploy (if you prefer)
 
-### Optimization Techniques
+```bash
+# Build the app
+npm run build
 
-- ✅ Code splitting with React.lazy()
-- ✅ Image optimization and lazy loading
-- ✅ Firestore query optimization with indexes
-- ✅ Storage CDN for media delivery
-- ✅ Vite build optimization
-- ✅ CSS minification
-- ✅ Tree shaking for smaller bundles
+# Deploy to Vercel
+vercel --prod
 
-### Performance Metrics
+# Or deploy to any static host
+# The build output is in the 'dist' folder
+```
 
-- **First Contentful Paint**: < 1.5s
-- **Time to Interactive**: < 3.5s
-- **Lighthouse Score**: 90+
-- **Bundle Size**: < 500KB (gzipped)
+### Post-Deploy Checklist
+
+- [ ] Test authentication (sign up, login, logout)
+- [ ] Create a test CD and upload files
+- [ ] Share a CD and test the guest access
+- [ ] Check the marketplace
+- [ ] Test on mobile device
+- [ ] Verify email sharing works (if configured)
+
+### Troubleshooting
+
+**"Permission denied" errors?**
+- Make sure you deployed the Firestore rules
+- Check that your domain is authorized in Firebase
+
+**Emails not sending?**
+- Verify EmailJS credentials are correct
+- Check EmailJS dashboard for quota/errors
+
+**Build failing?**
+- Run `npm run build` locally first
+- Check for TypeScript errors with `npm run build:check`
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+Want to make ReCd even better? I do love your help!
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### How to Contribute
+
+1. **Fork the repo** and clone it locally
+2. **Create a branch** for your feature: `git checkout -b feature/cool-new-thing`
+3. **Make your changes** and test them thoroughly
+4. **Write tests** if you're adding new functionality
+5. **Commit with clear messages**: `git commit -m 'Add disco ball animation to burning CDs'`
+6. **Push to your fork**: `git push origin feature/cool-new-thing`
+7. **Open a Pull Request** and describe what you built
+
+### What I am Looking For
+
+- 🐛 **Bug fixes**: Found something broken? Fix it!
+- ✨ **New features**: Have an idea? Build it!
+- 📝 **Documentation**: Make the README clearer
+- 🎨 **Design improvements**: Make it even more Y2K
+- ♿ **Accessibility**: Help make ReCd usable for everyone
+- 🧪 **Tests**: More coverage is always good
+- 🎨 **LLM/SLM/MLM Integration**: Using LLM to analyse the uploaded data and generate meta data for using for indexing(My next implementation plan after winning some prize to pay for Kiro subscription) 
 
 ### Development Guidelines
 
-- Follow the existing code style
-- Write tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
-- Keep commits atomic and well-described
+**Code Style**
+- Follow the existing patterns (check other components)
+- Use TypeScript—no `any` types unless absolutely necessary
+- Keep components under 250 lines
+- Write JSDoc comments for public functions
 
----
+**Testing**
+- Add tests for new features
+- Make sure all tests pass: `npm test`
+- Aim for 80%+ coverage on new code
+
+**Commits**
+- Keep commits focused (one thing per commit)
+- Write clear commit messages
+- Reference issues if applicable: `Fixes #123`
+
+**Before Submitting**
+- [ ] Code builds without errors: `npm run build`
+- [ ] All tests pass: `npm test`
+- [ ] No TypeScript errors: `npm run build:check`
+- [ ] Tested on mobile and desktop
+- [ ] Updated docs if needed
+
 
 ## 📝 License
 
@@ -571,28 +617,47 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
+## 🎯 Roadmap
 
-- **[Kiro AI](https://kiro.ai)** - For making AI-assisted development a reality
-- **Firebase** - For providing excellent serverless infrastructure
-- **React Team** - For the amazing UI library
-- **Vite Team** - For the blazing-fast build tool
-- **The Y2K Era** - For the nostalgic inspiration
+Things we're thinking about adding (no promises, but maybe):
+
+- [ ] **Playlist Mode**: Auto-play through all audio files
+- [ ] **CD Covers**: Upload custom artwork for your CDs
+- [ ] **Collaborative CDs**: Multiple people can add to one CD
+- [ ] **Comments**: Let people leave notes on shared CDs
+- [ ] **Themes**: More Y2K color schemes (think Winamp skins)
+- [ ] **Stats Dashboard**: See your most popular CDs
+- [ ] **Import from Spotify**: Pull playlists directly
+- [ ] **Burn Sound Effects**: Authentic CD-R drive noises
+
+Got ideas? Open an issue and let's talk about it!
 
 ---
 
-## 📞 Contact
+## 🙏 Acknowledgments
 
-**Project Link**: [https://github.com/yourusername/recd-platform](https://github.com/yourusername/recd-platform)
+Shoutouts to the tools and people that made this possible:
 
-**Live Demo**: [https://recd.fyi](https://recd.fyi)
+- **[Kiro AI](https://kiro.ai)** - Built 95% of this with AI assistance (seriously)
+- **Firebase** - For making backend development actually enjoyable
+- **React Team** - For the best UI library out there
+- **Vite** - For making builds so fast we forget they're happening
+- **The Y2K Era** - For the aesthetic inspiration and nostalgia fuel
+- **Everyone who burned CDs** - This is for you
 
+---
+
+## 📞 Contact & Links
+
+- **Live App**: [https://recd-fyi.vercel.app/](https://recd-fyi.vercel.app/)
+- **GitHub**: [https://github.com/vnmrsharma/ReCDFyi](https://github.com/vnmrsharma/ReCDFyi)
+- **Email**: info@vinamrasahrma.com
 ---
 
 <div align="center">
 
-**Made with 💿 and nostalgia**
+### Made with 💿 and nostalgia
 
 *Relive the CD era, one virtual disc at a time*
-
+**[Start Burning CDs →](https://recd-fyi.vercel.app/)**
 </div>

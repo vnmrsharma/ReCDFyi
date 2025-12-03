@@ -46,7 +46,7 @@ export function ShareModal({
     
     try {
       const shareToken = await generateShareToken(cd.id, userId);
-      const url = `${window.location.origin}/share/${shareToken.token}`;
+      const url = `${window.location.origin}/shared/${shareToken.token}`;
       setShareUrl(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate share link');

@@ -1,0 +1,59 @@
+/**
+ * LoadingOverlay styles for auth forms
+ * Semi-transparent overlay with Y2K aesthetic
+ */
+
+.auth-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(192, 192, 192, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: inherit;
+  /* GPU acceleration for smooth overlay */
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.auth-loading-content {
+  background: var(--bg-silver);
+  border: 2px solid var(--border-gray);
+  border-style: outset;
+  box-shadow: 
+    inset -1px -1px 0 rgba(0, 0, 0, 0.25),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.75),
+    4px 4px 12px rgba(0, 0, 0, 0.5);
+  padding: calc(var(--spacing-unit) * 3);
+  border-radius: 4px;
+  min-width: 200px;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .auth-loading-content {
+    padding: calc(var(--spacing-unit) * 2);
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-loading-content {
+    padding: var(--spacing-unit);
+    min-width: 140px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .auth-loading-overlay {
+    backdrop-filter: none;
+  }
+}

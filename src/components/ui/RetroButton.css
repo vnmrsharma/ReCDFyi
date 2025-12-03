@@ -54,17 +54,17 @@
 /* Variants */
 .retro-button-primary {
   background: linear-gradient(180deg, var(--primary-blue) 0%, var(--gradient-blue-dark) 100%);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 .retro-button-secondary {
   background: linear-gradient(180deg, var(--bg-silver) 0%, var(--gradient-silver-dark) 100%);
-  color: var(--text-black);
+  color: var(--text-black) !important;
 }
 
 .retro-button-danger {
   background: linear-gradient(180deg, var(--error-red) 0%, var(--gradient-red-dark) 100%);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 /* Sizes */

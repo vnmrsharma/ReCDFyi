@@ -20,7 +20,11 @@ export function RetroLayout({
 }: RetroLayoutProps) {
   return (
     <div className={`retro-layout ${className}`}>
-      <div className="retro-layout-content">
+      {/* Skip link for keyboard navigation */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <div className="retro-layout-content" id="main-content">
         <div className="retro-layout-container">
           {children}
         </div>

@@ -387,7 +387,7 @@
 
 .button-primary {
   background: var(--primary-blue);
-  color: var(--text-white);
+  color: var(--text-white) !important;
 }
 
 .button-primary:hover:not(:disabled) {
@@ -396,7 +396,7 @@
 
 .button-secondary {
   background: var(--bg-silver);
-  color: var(--text-black);
+  color: var(--text-black) !important;
 }
 
 .button-secondary:hover:not(:disabled) {

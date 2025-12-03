@@ -1,0 +1,221 @@
+/* AuthWindow - Retro window chrome with Y2K styling */
+
+.auth-window {
+  /* Window structure */
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  min-height: 400px;
+  background: #c0c0c0;
+  
+  /* Beveled border effect - classic Windows 98/2000 style */
+  border: 2px solid;
+  border-color: #dfdfdf #808080 #808080 #dfdfdf;
+  
+  /* Multiple shadows for depth */
+  box-shadow: 
+    inset 1px 1px 0 #fff,           /* Inner highlight */
+    inset -1px -1px 0 #000,         /* Inner shadow */
+    4px 4px 12px rgba(0, 0, 0, 0.5); /* Outer drop shadow */
+  
+  /* Smooth transitions */
+  transition: transform 0.2s ease;
+}
+
+/* Title bar */
+.auth-window-title-bar {
+  /* Classic Windows blue gradient */
+  background: linear-gradient(
+    180deg,
+    #0997ff 0%,
+    #0053ee 100%
+  );
+  color: white;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #000;
+  user-select: none;
+  cursor: default;
+}
+
+.auth-window-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Window control buttons */
+.auth-window-title-bar-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.auth-window-button {
+  width: 16px;
+  height: 14px;
+  border: 1px solid;
+  border-color: #fff #000 #000 #fff;
+  background: #c0c0c0;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+  color: #000;
+  transition: all 0.1s ease;
+}
+
+.auth-window-button:not(:disabled):hover {
+  background: #d4d4d4;
+}
+
+.auth-window-button:not(:disabled):active {
+  border-color: #000 #fff #fff #000;
+  background: #a0a0a0;
+  /* Use transform for GPU acceleration instead of layout changes */
+  transform: translate3d(0, 1px, 0);
+}
+
+.auth-window-button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* Button specific styles */
+.auth-window-button-minimize span {
+  margin-top: 6px;
+}
+
+.auth-window-button-maximize span {
+  font-size: 10px;
+}
+
+.auth-window-button-close {
+  background: #c0c0c0;
+}
+
+.auth-window-button-close:not(:disabled):hover {
+  background: #ff4444;
+  color: white;
+}
+
+.auth-window-button-close span {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: bold;
+}
+
+/* Window content area */
+.auth-window-content {
+  flex: 1;
+  padding: 24px;
+  background: #c0c0c0;
+  overflow: auto;
+}
+
+/* Tablet breakpoint (600px - 960px) */
+@media (max-width: 960px) and (min-width: 600px) {
+  .auth-window {
+    width: 400px;
+    min-height: 380px;
+  }
+  
+  .auth-window-content {
+    padding: 20px;
+  }
+}
+
+/* Mobile breakpoint (< 600px) */
+@media (max-width: 600px) {
+  .auth-window {
+    width: calc(100% - 32px);
+    min-height: auto;
+    max-width: 100%;
+    
+    /* Simplified border for mobile */
+    border: 1px solid;
+    border-color: #dfdfdf #808080 #808080 #dfdfdf;
+    
+    /* Reduced shadow for mobile */
+    box-shadow: 
+      inset 1px 1px 0 #fff,
+      inset -1px -1px 0 #000,
+      2px 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  
+  .auth-window-title-bar {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  
+  .auth-window-button {
+    width: 20px;
+    height: 18px;
+    font-size: 10px;
+  }
+  
+  .auth-window-button-close span {
+    font-size: 16px;
+  }
+  
+  .auth-window-content {
+    padding: 16px;
+  }
+}
+
+/* Touch-friendly sizing for mobile (Requirements 9.2) */
+@media (max-width: 600px) {
+  .auth-window-button {
+    /* Ensure minimum 44x44px touch target */
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .auth-window-button span {
+    font-size: 18px;
+  }
+  
+  .auth-window-button-minimize span {
+    margin-top: 8px;
+  }
+  
+  .auth-window-button-maximize span {
+    font-size: 16px;
+  }
+  
+  .auth-window-button-close span {
+    font-size: 20px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .auth-window {
+    transition: none;
+  }
+  
+  .auth-window-button {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .auth-window {
+    border-width: 3px;
+  }
+  
+  .auth-window-title-bar {
+    border-bottom-width: 2px;
+  }
+}

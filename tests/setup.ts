@@ -1,4 +1,9 @@
 import '@testing-library/jest-dom';
+import { TextEncoder, TextDecoder } from 'util';
+
+// Polyfill TextEncoder/TextDecoder for Node environment
+global.TextEncoder = TextEncoder;
+(global as any).TextDecoder = TextDecoder;
 
 // Mock import.meta for Vite environment variables
 (global as any).import = {
