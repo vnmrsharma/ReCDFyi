@@ -127,6 +127,15 @@ export function FileList({ files, onFilePreview, onFileDeleted, readOnly = false
               <p className="file-meta">
                 {file.fileType} • {formatFileSize(file.sizeBytes)}
               </p>
+              {file.aiMetadata && (
+                <div className="file-ai-tags">
+                  {file.aiMetadata.tags.slice(0, 3).map(tag => (
+                    <span key={tag} className="file-ai-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="file-actions">

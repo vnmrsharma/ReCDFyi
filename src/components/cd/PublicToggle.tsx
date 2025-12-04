@@ -4,6 +4,9 @@
 
 import { useState } from 'react';
 import { toggleCDPublic } from '../../services/publicCDService';
+import { useMetadataGeneration } from '../../hooks/useMetadataGeneration';
+import { shouldGenerateMetadata } from '../../services/cdMetadataService';
+import { MetadataGenerationModal } from './MetadataGenerationModal';
 import type { CD } from '../../types';
 import './CDComponents.css';
 
@@ -20,6 +23,7 @@ export function PublicToggle({ cd, userId, onToggleComplete }: PublicToggleProps
   const [isToggling, setIsToggling] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isGenerating, progress, generateMetadata, reset } = useMetadataGeneration();
 
   const handleToggleClick = () => {
     if (cd.isPublic) {
@@ -46,12 +50,34 @@ export function PublicToggle({ cd, userId, onToggleComplete }: PublicToggleProps
 
     try {
       await toggleCDPublic(cd.id, userId, newPublicState);
+      
+      // Call onToggleComplete immediately so CD becomes public
       onToggleComplete();
+      
+      // If making public and metadata not yet generated, trigger generation
+      if (newPublicState && shouldGenerateMetadata({ isPublic: newPublicState, aiMetadataGenerated: cd.aiMetadataGenerated })) {
+        // Start metadata generation asynchronously (non-blocking)
+        generateMetadata(cd.id)
+          .then(() => {
+            // Refresh CD data after metadata generation completes
+            onToggleComplete();
+          })
+          .catch((err) => {
+            console.error('Metadata generation failed:', err);
+            // Don't block the UI - metadata generation is optional
+          });
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to update CD visibility');
     } finally {
       setIsToggling(false);
     }
+  };
+  
+  const handleMetadataModalClose = () => {
+    reset();
+    // Force page reload to show updated metadata
+    window.location.reload();
   };
 
   return (
@@ -94,7 +120,10 @@ export function PublicToggle({ cd, userId, onToggleComplete }: PublicToggleProps
             <div className="modal-body">
               <p>
                 Making this CD public will allow anyone to view and download its contents
-                from the marketplace. Are you sure you want to continue?
+                from the marketplace.
+              </p>
+              <p style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
+                We'll automatically generate smart metadata to make your CD easier to discover through search.
               </p>
             </div>
             <div className="modal-actions">
@@ -114,6 +143,12 @@ export function PublicToggle({ cd, userId, onToggleComplete }: PublicToggleProps
           </div>
         </div>
       )}
+      
+      <MetadataGenerationModal
+        isOpen={isGenerating}
+        progress={progress}
+        onClose={handleMetadataModalClose}
+      />
     </>
   );
 }

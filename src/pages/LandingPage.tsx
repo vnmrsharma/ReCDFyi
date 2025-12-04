@@ -74,6 +74,18 @@ export function LandingPage() {
             <h3>Serverless & Fast</h3>
             <p>Built on modern serverless architecture for lightning-fast performance and reliability.</p>
           </div>
+          
+          <div className="feature-card">
+            <div className="feature-icon">🤖</div>
+            <h3>AI-Powered Search</h3>
+            <p>Smart metadata generation for public CDs. AI analyzes your files and creates searchable tags automatically.</p>
+          </div>
+          
+          <div className="feature-card">
+            <div className="feature-icon">🌐</div>
+            <h3>Public Marketplace</h3>
+            <p>Share your CDs with the world. Browse public collections and discover music, photos, and videos from other creators.</p>
+          </div>
         </div>
       </section>
 

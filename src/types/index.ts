@@ -24,6 +24,8 @@ export interface CD {
   isPublic: boolean;
   publicAt?: Date;
   viewCount: number;
+  aiMetadataGenerated?: boolean;
+  aiMetadataGeneratedAt?: Date;
 }
 
 export interface MediaFile {
@@ -37,6 +39,15 @@ export interface MediaFile {
   storagePath: string;
   uploadedAt: Date;
   thumbnailPath?: string;
+  aiMetadata?: AIMetadata;
+}
+
+export interface AIMetadata {
+  description: string;
+  tags: string[];
+  category: 'photo' | 'music' | 'video' | 'art' | 'nature' | 'people' | 'abstract' | 'other';
+  confidence: number;
+  generatedAt: Date;
 }
 
 export interface ShareToken {

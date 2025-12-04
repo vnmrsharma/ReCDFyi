@@ -42,6 +42,18 @@ function mapFirestoreToMediaFile(id: string, data: any): MediaFile {
     uploadedAt = new Date();
   }
 
+  // Handle AI metadata if present
+  let aiMetadata = undefined;
+  if (data.aiMetadata) {
+    aiMetadata = {
+      description: data.aiMetadata.description,
+      tags: data.aiMetadata.tags || [],
+      category: data.aiMetadata.category,
+      confidence: data.aiMetadata.confidence,
+      generatedAt: data.aiMetadata.generatedAt?.toDate?.() || new Date(),
+    };
+  }
+
   return {
     id,
     cdId: data.cdId,
@@ -53,6 +65,7 @@ function mapFirestoreToMediaFile(id: string, data: any): MediaFile {
     storagePath: data.storagePath,
     uploadedAt,
     thumbnailPath: data.thumbnailPath,
+    aiMetadata,
   };
 }
 
@@ -230,6 +243,41 @@ export function validateFileForUpload(
   remainingSpace: number
 ): ValidationResult {
   return validateFile(file, remainingSpace);
+}
+
+/**
+ * Updates file metadata with AI-generated data
+ * @param cdId - ID of the CD containing the file
+ * @param fileId - ID of the file to update
+ * @param aiMetadata - AI-generated metadata to add
+ * @returns Promise that resolves when update is complete
+ * @throws {Error} If update fails
+ */
+export async function updateFileAIMetadata(
+  cdId: string,
+  fileId: string,
+  aiMetadata: any
+): Promise<void> {
+  try {
+    const fileDocRef = doc(
+      db,
+      COLLECTIONS.CDS,
+      cdId,
+      COLLECTIONS.FILES,
+      fileId
+    );
+    
+    await updateDoc(fileDocRef, {
+      aiMetadata: {
+        ...aiMetadata,
+        generatedAt: serverTimestamp(),
+      },
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error: any) {
+    console.error('Failed to update file AI metadata:', error);
+    throw new Error(`Failed to update file AI metadata: ${error.message}`);
+  }
 }
 
 /**

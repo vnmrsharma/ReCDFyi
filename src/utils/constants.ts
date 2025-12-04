@@ -70,6 +70,13 @@ export const COLLECTIONS = {
   CD_VIEWS: 'cdViews',
 } as const;
 
+// AI Metadata settings
+export const AI_METADATA_SETTINGS = {
+  BATCH_DELAY_MS: 100, // Delay between API calls to avoid rate limits
+  MAX_RETRIES: 2, // Number of retries for failed metadata generation
+  TIMEOUT_MS: 10000, // Timeout for single file metadata generation
+} as const;
+
 // Marketplace settings
 export const MARKETPLACE_PAGE_SIZE = 20; // CDs per page
 export const ANALYTICS_PAGE_SIZE = 50; // Viewers per page

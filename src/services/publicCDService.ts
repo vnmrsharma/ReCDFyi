@@ -18,6 +18,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { updateCDVisibility } from './cdService';
 import type { PublicCD, MarketplaceQueryOptions } from '../types';
 import { COLLECTIONS, ERROR_MESSAGES, MARKETPLACE_PAGE_SIZE } from '../utils/constants';
 
@@ -132,18 +133,8 @@ export async function toggleCDPublic(
       }
     }
 
-    // Update the main CD document
-    const updateData: any = {
-      isPublic,
-      updatedAt: serverTimestamp(),
-    };
-
-    // Always set publicAt when making public (even if it existed before)
-    if (isPublic) {
-      updateData.publicAt = serverTimestamp();
-    }
-
-    await updateDoc(cdRef, updateData);
+    // Update CD visibility using cdService
+    await updateCDVisibility(cdId, userId, isPublic);
 
     // Sync with publicCDs collection
     if (isPublic) {

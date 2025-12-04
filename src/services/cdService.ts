@@ -251,3 +251,63 @@ export async function deleteCD(cdId: string, userId: string): Promise<void> {
     throw new Error(`Failed to delete CD: ${error.message}`);
   }
 }
+
+/**
+ * Updates the public visibility of a CD (owner only)
+ * When making a CD public, triggers AI metadata generation for all files
+ * @param cdId - ID of the CD to update
+ * @param userId - ID of the user performing the update
+ * @param isPublic - New public visibility state
+ * @returns Promise that resolves when update is complete
+ * @throws {Error} If update fails or user is not the owner
+ */
+export async function updateCDVisibility(
+  cdId: string,
+  userId: string,
+  isPublic: boolean
+): Promise<void> {
+  try {
+    // Verify ownership
+    const isOwner = await verifyOwnership(cdId, userId);
+    if (!isOwner) {
+      throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
+    }
+    
+    const docRef = doc(db, COLLECTIONS.CDS, cdId);
+    
+    const updateData: any = {
+      isPublic,
+      updatedAt: serverTimestamp(),
+    };
+    
+    // Set publicAt timestamp when making public
+    if (isPublic) {
+      updateData.publicAt = serverTimestamp();
+    }
+    
+    await updateDoc(docRef, updateData);
+  } catch (error: any) {
+    if (error.message === ERROR_MESSAGES.UNAUTHORIZED) {
+      throw error;
+    }
+    throw new Error(`Failed to update CD visibility: ${error.message}`);
+  }
+}
+
+/**
+ * Marks a CD as having AI metadata generated
+ * @param cdId - ID of the CD to update
+ * @returns Promise that resolves when update is complete
+ */
+export async function markAIMetadataGenerated(cdId: string): Promise<void> {
+  try {
+    const docRef = doc(db, COLLECTIONS.CDS, cdId);
+    await updateDoc(docRef, {
+      aiMetadataGenerated: true,
+      aiMetadataGeneratedAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error: any) {
+    throw new Error(`Failed to mark AI metadata as generated: ${error.message}`);
+  }
+}

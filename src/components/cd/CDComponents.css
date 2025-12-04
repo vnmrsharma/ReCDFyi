@@ -1185,3 +1185,34 @@
     max-height: 300px;
   }
 }
+
+/* AI Metadata Tags in File List */
+.file-ai-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.file-ai-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: 1px solid #667eea40;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #667eea;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .file-ai-tags {
+    gap: 3px;
+    margin-top: 4px;
+  }
+
+  .file-ai-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}

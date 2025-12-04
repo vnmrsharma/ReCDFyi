@@ -10,6 +10,7 @@ import { FilePreviewModal } from '../preview/FilePreviewModal.tsx';
 import { PublicToggle } from './PublicToggle';
 import { PublicIndicator } from './PublicIndicator';
 import { ViewAnalytics } from './ViewAnalytics';
+import { AIMetadataDisplay } from './AIMetadataDisplay';
 import { getFileMetadata } from '../../services/fileService';
 import { useAuth } from '../../hooks/useAuth';
 import type { CD, MediaFile } from '../../types';
@@ -78,7 +79,9 @@ export function CDDetailView({ cd, onCDUpdate }: CDDetailViewProps) {
   };
 
   const handlePublicToggleComplete = () => {
-    // Notify parent to reload CD data
+    // Reload files to get updated AI metadata
+    loadFiles();
+    // Notify parent to reload CD data (includes aiMetadataGenerated flag)
     if (onCDUpdate) {
       onCDUpdate();
     }
@@ -197,6 +200,11 @@ export function CDDetailView({ cd, onCDUpdate }: CDDetailViewProps) {
           remainingSpace={remainingBytes}
           onUploadComplete={handleUploadComplete}
         />
+
+        {/* Show AI metadata for public CDs with generated metadata */}
+        {cd.isPublic && files.length > 0 && files.some(f => f.aiMetadata) && (
+          <AIMetadataDisplay files={files} />
+        )}
 
         <FileList
           files={files}

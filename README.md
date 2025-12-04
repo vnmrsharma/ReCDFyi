@@ -34,6 +34,30 @@ The app is now fully production-ready with all the legal pages and user flows po
 
 ---
 
+## 🤖 What's New: AI-Powered Smart Metadata!
+
+ReCd just got a whole lot smarter! When you make a CD public, we use **Google Gemini 2.0 Flash** to automatically analyze your files and generate intelligent metadata:
+
+- **🔍 Smart Search**: Find CDs by content, not just names
+- **🏷️ Auto-Tagging**: AI generates relevant tags from filenames
+- **🎯 Better Discovery**: Public CDs are easier to find in the marketplace
+- **🔒 Privacy-First**: Only happens when YOU make a CD public
+- **⚡ Non-Blocking**: Happens in the background—no waiting
+- **🎨 Retro UI**: Metadata displayed in authentic Y2K style
+
+**How it works:**
+1. Upload files with descriptive names (e.g., "sunset_beach_vacation.jpg")
+2. Toggle CD to public
+3. AI analyzes filenames and generates smart tags
+4. Metadata appears in retro Y2K style
+5. Enhanced search makes your CD discoverable
+
+**Pro tip**: Use descriptive filenames for best AI results!
+
+See [AI_METADATA_FEATURE.md](docs/AI_METADATA_FEATURE.md) for technical details.
+
+---
+
 ## 🎯 About The Project
 
 Remember the days when you'd carefully select songs, burn them onto a CD, design custom cover art, and share your creation with friends? **ReCd(fyi)** brings back that nostalgic experience in a modern, digital format.
@@ -277,9 +301,14 @@ You'll need these installed on your machine:
    VITE_EMAILJS_SERVICE_ID=service_xxx
    VITE_EMAILJS_TEMPLATE_ID=template_xxx
    VITE_EMAILJS_PUBLIC_KEY=your_public_key
+   
+   # Google Gemini AI (optional - for smart metadata generation)
+   # Get your API key from https://aistudio.google.com/app/apikey
+   # Free tier: 15 requests/min, 1500/day - plenty for most use cases
+   VITE_GEMINI_API_KEY=your_gemini_api_key_here
    ```
    
-   > **Note**: EmailJS is optional. If you skip it, email sharing won't work but everything else will.
+   > **Note**: EmailJS and Gemini API are optional. Without them, email sharing and AI metadata won't work, but everything else will.
 
 5. **Deploy Firebase security rules**
    ```bash
@@ -629,6 +658,7 @@ Things we're thinking about adding (no promises, but maybe):
 - [ ] **Stats Dashboard**: See your most popular CDs
 - [ ] **Import from Spotify**: Pull playlists directly
 - [ ] **Burn Sound Effects**: Authentic CD-R drive noises
+- [x] **🤖 AI Metadata Generation**: Smart search using Google Gemini (JUST SHIPPED!)
 
 Got ideas? Open an issue and let's talk about it!
 
