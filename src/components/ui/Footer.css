@@ -31,6 +31,14 @@
   white-space: nowrap;
 }
 
+.footer-note {
+  line-height: 1.4;
+}
+
+.footer-note a {
+  color: var(--primary-blue);
+}
+
 .footer-version {
   color: var(--text-gray);
 }

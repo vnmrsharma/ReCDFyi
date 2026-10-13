@@ -19,6 +19,10 @@ export function Footer({ className = '' }: FooterProps) {
           <span className="footer-copyright">
             © {currentYear} ReCd(fyi)
           </span>
+          <span className="footer-note">
+            If you are enjoying this website or have a suggestion, do reach out to me at{' '}
+            <a href="mailto:info@vinamrasharma.com">info@vinamrasharma.com</a>
+          </span>
           <span className="footer-version">
             v{APP_VERSION}
           </span>

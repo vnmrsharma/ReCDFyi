@@ -89,6 +89,30 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* Platform stats — static snapshot from Firebase, October 2026 */}
+      <section className="landing-section landing-stats" aria-label="Platform statistics">
+        <h2 className="section-title">The Collection So Far</h2>
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-value">3,771</div>
+            <div className="stat-label">Accounts</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">188</div>
+            <div className="stat-label">Public CDs</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">619</div>
+            <div className="stat-label">Share links</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-value">154</div>
+            <div className="stat-label">Creators</div>
+          </div>
+        </div>
+        <p className="stats-note">As of October 2026</p>
+      </section>
+
       {/* How It Works Section */}
       <section className="landing-section landing-how-it-works">
         <h2 className="section-title">How It Works</h2>
@@ -133,7 +157,11 @@ export function LandingPage() {
         <div className="footer-content">
           <div className="footer-brand">
             <strong>ReCd(fyi)</strong>
-            <p>© 2025 ReCd(fyi). All rights reserved.</p>
+            <p>© 2026 ReCd(fyi). All rights reserved.</p>
+            <p className="footer-note">
+              If you are enjoying this website or have a suggestion, do reach out to me at{' '}
+              <a href="mailto:info@vinamrasharma.com">info@vinamrasharma.com</a>
+            </p>
           </div>
           <nav className="footer-links">
             <Link to="/about">About</Link>
