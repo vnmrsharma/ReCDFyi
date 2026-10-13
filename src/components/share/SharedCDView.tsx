@@ -27,7 +27,7 @@ export function SharedCDView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [previewFile, setPreviewFile] = useState<MediaFile | null>(null);
-  const [ownerEmail, setOwnerEmail] = useState<string>('');
+  const [ownerLabel, setOwnerLabel] = useState<string>('');
   const [showGuestPrompt, setShowGuestPrompt] = useState(true);
   const [hasAcceptedGuest, setHasAcceptedGuest] = useState(false);
 
@@ -60,9 +60,8 @@ export function SharedCDView() {
       const filesData = await getSharedCDFiles(cdData.id, token);
       setFiles(filesData);
       
-      // For now, we'll show the user ID as owner info
-      // In a real app, you might want to fetch user details from Firestore
-      setOwnerEmail(cdData.userId);
+      // Public profile handle only — never expose owner email
+      setOwnerLabel(cdData.username || 'a ReCd creator');
     } catch (err: any) {
       // Map error to user-friendly message
       const errorMessage = err.message || 'Failed to load shared CD';
@@ -166,7 +165,7 @@ export function SharedCDView() {
       <div className="shared-cd-banner">
         <span className="banner-icon">🎵</span>
         <span className="banner-text">
-          Shared by <strong>{ownerEmail}</strong>
+          Shared by <strong>{ownerLabel}</strong>
         </span>
       </div>
 

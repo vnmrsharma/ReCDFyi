@@ -19,8 +19,8 @@ export async function generateZipDownload(files: MediaFile[]): Promise<Blob> {
     // Download all files and add to zip
     const downloadPromises = files.map(async (file) => {
       try {
-        // Get download URL
-        const downloadURL = await getFileDownloadURL(file.storagePath);
+        // Prefer snapshot URL for guest shares; otherwise request a Storage URL
+        const downloadURL = file.downloadURL || (await getFileDownloadURL(file.storagePath));
         
         // Fetch file content
         const response = await fetch(downloadURL);

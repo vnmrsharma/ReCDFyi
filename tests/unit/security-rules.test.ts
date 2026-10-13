@@ -15,7 +15,7 @@ import {
   assertSucceeds,
   assertFails,
 } from '@firebase/rules-unit-testing';
-import { setDoc, doc, getDoc, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
+import { setDoc, doc, getDoc, getDocs, updateDoc, deleteDoc, collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -234,43 +234,44 @@ describe('Firebase Security Rules', () => {
     });
 
     describe('CDs Collection - Share Token Access', () => {
-      it('should allow access to CD with valid share token', async () => {
-        const TOKEN = 'valid-token-123';
+      it('should keep private CDs unreadable without ownership even if a share token exists', async () => {
+        // Guest share access uses the shareTokens/{token} snapshot, not cds/{cdId}.
+        const TOKEN = 'valid-token-1234567890123456789012';
         const otherContext = testEnv.authenticatedContext(OTHER_UID);
-        
-        // Create CD and valid share token
+
         await testEnv.withSecurityRulesDisabled(async (context) => {
           await setDoc(doc(context.firestore(), 'cds', CD_ID), {
             userId: OWNER_UID,
             name: 'Shared CD',
+            isPublic: false,
             createdAt: new Date(),
             storageUsedBytes: 0,
             storageLimitBytes: 20 * 1024 * 1024,
             fileCount: 0,
           });
-          
+
           await setDoc(doc(context.firestore(), 'shareTokens', TOKEN), {
             token: TOKEN,
             cdId: CD_ID,
             createdBy: OWNER_UID,
             createdAt: new Date(),
-            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             accessCount: 0,
+            cdSnapshot: { name: 'Shared CD', username: 'owner' },
           });
         });
-        
-        // Access with token query parameter
+
         const cdRef = doc(otherContext.firestore(), 'cds', CD_ID);
-        // Note: In actual implementation, token would be passed as query parameter
-        // For testing, we verify the rule logic by checking if token exists and is valid
-        await assertSucceeds(getDoc(cdRef));
+        await assertFails(getDoc(cdRef));
+
+        const tokenRef = doc(otherContext.firestore(), 'shareTokens', TOKEN);
+        await assertSucceeds(getDoc(tokenRef));
       });
 
       it('should deny access to CD with expired share token', async () => {
         const TOKEN = 'expired-token-456';
         const otherContext = testEnv.authenticatedContext(OTHER_UID);
         
-        // Create CD and expired share token
         await testEnv.withSecurityRulesDisabled(async (context) => {
           await setDoc(doc(context.firestore(), 'cds', CD_ID), {
             userId: OWNER_UID,
@@ -285,8 +286,8 @@ describe('Firebase Security Rules', () => {
             token: TOKEN,
             cdId: CD_ID,
             createdBy: OWNER_UID,
-            createdAt: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000), // 31 days ago
-            expiresAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // Expired yesterday
+            createdAt: new Date(Date.now() - 31 * 24 * 60 * 60 * 1000),
+            expiresAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
             accessCount: 0,
           });
         });
@@ -298,7 +299,6 @@ describe('Firebase Security Rules', () => {
       it('should deny access to CD with invalid share token', async () => {
         const otherContext = testEnv.authenticatedContext(OTHER_UID);
         
-        // Create CD without any share token
         await testEnv.withSecurityRulesDisabled(async (context) => {
           await setDoc(doc(context.firestore(), 'cds', CD_ID), {
             userId: OWNER_UID,
@@ -402,9 +402,10 @@ describe('Firebase Security Rules', () => {
     });
 
     describe('ShareTokens Collection', () => {
-      it('should allow anyone to read share tokens', async () => {
-        const TOKEN = 'public-token-789';
+      it('should allow get of a share token by ID but deny listing the collection', async () => {
+        const TOKEN = 'public-token-789012345678901234';
         const otherContext = testEnv.authenticatedContext(OTHER_UID);
+        const unauthContext = testEnv.unauthenticatedContext();
         
         await testEnv.withSecurityRulesDisabled(async (context) => {
           await setDoc(doc(context.firestore(), 'shareTokens', TOKEN), {
@@ -419,6 +420,23 @@ describe('Firebase Security Rules', () => {
         
         const tokenRef = doc(otherContext.firestore(), 'shareTokens', TOKEN);
         await assertSucceeds(getDoc(tokenRef));
+
+        // Listing must fail — otherwise every share link can be scraped
+        await assertFails(getDocs(collection(unauthContext.firestore(), 'shareTokens')));
+        await assertFails(getDocs(collection(otherContext.firestore(), 'shareTokens')));
+      });
+
+      it('should deny reading other users documents so emails stay private', async () => {
+        const unauthContext = testEnv.unauthenticatedContext();
+        await testEnv.withSecurityRulesDisabled(async (context) => {
+          await setDoc(doc(context.firestore(), 'users', OWNER_UID), {
+            email: 'secret@example.com',
+            username: 'owner',
+            createdAt: new Date(),
+          });
+        });
+
+        await assertFails(getDoc(doc(unauthContext.firestore(), 'users', OWNER_UID)));
       });
 
       it('should allow owner to create share token for their CD', async () => {

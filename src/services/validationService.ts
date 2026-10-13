@@ -26,7 +26,7 @@ import {
   ERROR_MESSAGES,
   COLLECTIONS,
 } from '../utils/constants';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import type { ValidationResult } from '../types';
 
@@ -254,17 +254,9 @@ export function validateUsernameFormat(username: string): ValidationResult {
 export async function checkUsernameAvailability(username: string): Promise<boolean> {
   try {
     const normalizedUsername = normalizeUsername(username);
-    
-    // Query the usernames collection for case-insensitive match
-    const usernamesRef = collection(db, COLLECTIONS.USERNAMES);
-    const q = query(
-      usernamesRef,
-      where('__name__', '==', normalizedUsername),
-      limit(1)
-    );
-    
-    const snapshot = await getDocs(q);
-    return snapshot.empty; // Available if no documents found
+    // Direct get by document ID — usernames/{usernameL} is the uniqueness lock
+    const usernameSnap = await getDoc(doc(db, COLLECTIONS.USERNAMES, normalizedUsername));
+    return !usernameSnap.exists();
   } catch (error) {
     console.error('Error checking username availability:', error);
     throw new Error('Failed to check username availability');

@@ -31,7 +31,7 @@ export function FilePreviewModal({ file, onClose }: FilePreviewModalProps) {
     try {
       setLoading(true);
       setError(null);
-      const url = await getFileDownloadURL(file.storagePath);
+      const url = file.downloadURL || (await getFileDownloadURL(file.storagePath));
       setFileURL(url);
     } catch (err: any) {
       setError(err.message || 'Failed to load file');

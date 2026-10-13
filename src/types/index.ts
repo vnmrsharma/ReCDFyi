@@ -40,6 +40,34 @@ export interface MediaFile {
   uploadedAt: Date;
   thumbnailPath?: string;
   aiMetadata?: AIMetadata;
+  /** Signed download URL for guest share access (bypasses Storage rules) */
+  downloadURL?: string;
+}
+
+export interface ShareTokenCDSnapshot {
+  name: string;
+  username: string;
+  label?: string;
+  fileCount: number;
+  storageUsedBytes: number;
+  storageLimitBytes: number;
+  isPublic: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ShareTokenFileSnapshot {
+  id: string;
+  cdId: string;
+  filename: string;
+  originalName: string;
+  fileType: 'image' | 'audio' | 'video';
+  mimeType: string;
+  sizeBytes: number;
+  storagePath: string;
+  uploadedAt: Date;
+  thumbnailPath?: string;
+  downloadURL: string;
 }
 
 export interface AIMetadata {

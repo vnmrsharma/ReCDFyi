@@ -26,7 +26,7 @@ export function FileList({ files, onFilePreview, onFileDeleted, readOnly = false
   const handleFileDownload = async (file: MediaFile) => {
     try {
       setDownloadingFile(file.id);
-      const downloadURL = await getFileDownloadURL(file.storagePath);
+      const downloadURL = file.downloadURL || (await getFileDownloadURL(file.storagePath));
       
       // Create a temporary link and trigger download
       const link = document.createElement('a');
