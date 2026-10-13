@@ -21,6 +21,7 @@ import { HelpPage } from './pages/HelpPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { GoogleAnalytics } from './components/analytics/GoogleAnalytics';
 import './App.css';
 
 /**
@@ -29,6 +30,7 @@ import './App.css';
 function App() {
   return (
     <BrowserRouter>
+      <GoogleAnalytics />
       <AuthProvider>
         <CDProvider>
           <Routes>
