@@ -10,6 +10,7 @@ import { validateFiles } from '../../services/validationService';
 import { uploadFile } from '../../services/fileService';
 import { BurningProgress } from './BurningProgress';
 import type { ValidationResult } from '../../types';
+import { trackEvent } from '../../utils/analytics';
 import './FileUploader.css';
 
 interface FileUploaderProps {
@@ -109,6 +110,10 @@ export function FileUploader({
       // Upload complete
       setUploadError(null);
       setFailedFiles([]);
+      trackEvent('file_upload', {
+        file_count: files.length,
+        total_bytes: totalBytes,
+      });
       if (onUploadComplete) {
         onUploadComplete();
       }

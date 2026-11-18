@@ -7,6 +7,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { EMAIL_REGEX } from '../../utils/constants';
 import { LoadingOverlay } from './LoadingOverlay';
+import { trackEvent } from '../../utils/analytics';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -78,7 +79,8 @@ export function LoginForm({
 
     try {
       await login(email, password);
-      
+      trackEvent('login');
+
       // Show success state before redirect
       setShowSuccess(true);
       setTimeout(() => {

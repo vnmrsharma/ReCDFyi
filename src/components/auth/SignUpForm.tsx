@@ -12,6 +12,7 @@ import {
   generateUsernameSuggestions 
 } from '../../services/validationService';
 import { LoadingOverlay } from './LoadingOverlay';
+import { trackEvent } from '../../utils/analytics';
 
 interface SignUpFormProps {
   onSuccess?: () => void;
@@ -167,7 +168,8 @@ export function SignUpForm({ onSuccess, onSwitchToLogin, animateTransition = tru
 
     try {
       await signUp(email, password, username);
-      
+      trackEvent('signup');
+
       // Show success state before redirect
       setShowSuccess(true);
       setTimeout(() => {

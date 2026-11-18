@@ -9,6 +9,7 @@ import { validateCDName } from '../../services/validationService';
 import { useAuth } from '../../hooks/useAuth';
 import { useCDs } from '../../contexts/CDContext';
 import { MAX_CD_NAME_LENGTH } from '../../utils/constants';
+import { trackEvent } from '../../utils/analytics';
 
 interface CreateCDModalProps {
   isOpen: boolean;
@@ -46,7 +47,10 @@ export function CreateCDModal({ isOpen, onClose }: CreateCDModalProps) {
     try {
       const newCD = await createCD(user.uid, name.trim(), label.trim() || undefined);
       addCD(newCD);
-      
+      trackEvent('cd_create', {
+        has_label: Boolean(label.trim()),
+      });
+
       // Reset form and close modal
       setName('');
       setLabel('');

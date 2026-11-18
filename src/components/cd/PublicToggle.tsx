@@ -8,6 +8,7 @@ import { useMetadataGeneration } from '../../hooks/useMetadataGeneration';
 import { shouldGenerateMetadata } from '../../services/cdMetadataService';
 import { MetadataGenerationModal } from './MetadataGenerationModal';
 import type { CD } from '../../types';
+import { trackEvent } from '../../utils/analytics';
 import './CDComponents.css';
 
 interface PublicToggleProps {
@@ -50,7 +51,10 @@ export function PublicToggle({ cd, userId, onToggleComplete }: PublicToggleProps
 
     try {
       await toggleCDPublic(cd.id, userId, newPublicState);
-      
+      trackEvent('cd_public_toggle', {
+        is_public: newPublicState,
+      });
+
       // Call onToggleComplete immediately so CD becomes public
       onToggleComplete();
       

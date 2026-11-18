@@ -8,6 +8,7 @@ import { ShareLinkDisplay } from './ShareLinkDisplay';
 import { EmailShareForm } from './EmailShareForm';
 import { generateShareToken } from '../../services/shareService';
 import type { CD } from '../../types';
+import { trackEvent } from '../../utils/analytics';
 import './ShareComponents.css';
 
 interface ShareModalProps {
@@ -48,6 +49,7 @@ export function ShareModal({
       const shareToken = await generateShareToken(cd.id, userId);
       const url = `${window.location.origin}/shared/${shareToken.token}`;
       setShareUrl(url);
+      trackEvent('share_link_create');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate share link');
     } finally {
@@ -57,9 +59,13 @@ export function ShareModal({
 
   const handleSendEmail = async (recipientEmail: string, customMessage?: string) => {
     await onSendEmail(recipientEmail, shareUrl, customMessage);
+    trackEvent('share_email_send', {
+      has_custom_message: Boolean(customMessage),
+    });
   };
 
   const handleCopyLink = () => {
+    trackEvent('share_link_copy');
     onCopyLink?.();
   };
 
