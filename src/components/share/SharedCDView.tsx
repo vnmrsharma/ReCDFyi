@@ -21,10 +21,10 @@ import './ShareComponents.css';
  */
 export function SharedCDView() {
   const { token } = useParams<{ token: string }>();
-  
+
   const [cd, setCD] = useState<CD | null>(null);
   const [files, setFiles] = useState<MediaFile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewFile, setPreviewFile] = useState<MediaFile | null>(null);
   const [ownerLabel, setOwnerLabel] = useState<string>('');
@@ -32,12 +32,22 @@ export function SharedCDView() {
   const [hasAcceptedGuest, setHasAcceptedGuest] = useState(false);
 
   useEffect(() => {
-    // Check if user has already accepted guest access in this session
-    const guestAccepted = sessionStorage.getItem(`guest_accepted_${token}`);
-    if (guestAccepted === 'true') {
+    if (!token) {
+      setError('Share token is required');
+      setShowGuestPrompt(false);
+      return;
+    }
+
+    const guestAccepted = sessionStorage.getItem(`guest_accepted_${token}`) === 'true';
+    if (guestAccepted) {
       setShowGuestPrompt(false);
       setHasAcceptedGuest(true);
       loadSharedCD();
+    } else {
+      // Wait for guest choice — do not leave the page stuck on a spinner
+      setLoading(false);
+      setShowGuestPrompt(true);
+      setHasAcceptedGuest(false);
     }
   }, [token]);
 
@@ -51,21 +61,17 @@ export function SharedCDView() {
     try {
       setLoading(true);
       setError(null);
-      
-      // Validate token and get CD
+
       const cdData = await getSharedCD(token);
       setCD(cdData);
-      
-      // Get files for the CD using the share token
+
       const filesData = await getSharedCDFiles(cdData.id, token);
       setFiles(filesData);
-      
-      // Public profile handle only — never expose owner email
+
       setOwnerLabel(cdData.username || 'a ReCd creator');
     } catch (err: any) {
-      // Map error to user-friendly message
       const errorMessage = err.message || 'Failed to load shared CD';
-      
+
       if (errorMessage.includes('invalid') || errorMessage.includes('revoked')) {
         setError(ERROR_MESSAGES.SHARE_TOKEN_INVALID);
       } else if (errorMessage.includes('expired')) {
@@ -91,26 +97,20 @@ export function SharedCDView() {
   const handleContinueAsGuest = () => {
     setShowGuestPrompt(false);
     setHasAcceptedGuest(true);
-    // Store in session storage so they don't see it again this session
     if (token) {
       sessionStorage.setItem(`guest_accepted_${token}`, 'true');
     }
     loadSharedCD();
   };
 
-  // Show guest prompt first if they haven't accepted
-  if (showGuestPrompt && !hasAcceptedGuest && cd) {
+  // Show guest prompt before loading so share links are never stuck on a spinner
+  if (showGuestPrompt && !hasAcceptedGuest) {
     return (
-      <>
-        <GuestPromptModal
-          isOpen={showGuestPrompt}
-          onContinueAsGuest={handleContinueAsGuest}
-          cdName={cd.name}
-        />
-        <div className="shared-cd-container">
-          <LoadingSpinner size="large" message="Loading shared CD..." />
-        </div>
-      </>
+      <GuestPromptModal
+        isOpen={true}
+        onContinueAsGuest={handleContinueAsGuest}
+        cdName="this shared CD"
+      />
     );
   }
 
@@ -161,7 +161,6 @@ export function SharedCDView() {
 
   return (
     <div className="shared-cd-container">
-      {/* Owner banner */}
       <div className="shared-cd-banner">
         <span className="banner-icon">🎵</span>
         <span className="banner-text">
@@ -169,7 +168,6 @@ export function SharedCDView() {
         </span>
       </div>
 
-      {/* CD header */}
       <div className="cd-header">
         <div className="cd-header-icon">
           <svg viewBox="0 0 100 100" className="disc-svg-large">
@@ -201,12 +199,14 @@ export function SharedCDView() {
         <div className="cd-header-info">
           <h1>{cd.name}</h1>
           {cd.label && <p className="cd-label-text">{cd.label}</p>}
-          
+
           <div className="cd-storage-info">
             <div className="storage-bar-large">
               <div
                 className="storage-bar-fill"
-                style={{ width: `${Math.min((cd.storageUsedBytes / cd.storageLimitBytes) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min((cd.storageUsedBytes / cd.storageLimitBytes) * 100, 100)}%`,
+                }}
               />
             </div>
             <p className="storage-text-large">
@@ -216,7 +216,6 @@ export function SharedCDView() {
         </div>
       </div>
 
-      {/* File list */}
       <div className="cd-content">
         {files.length === 0 ? (
           <EmptyState
@@ -233,7 +232,6 @@ export function SharedCDView() {
         )}
       </div>
 
-      {/* CTA banner */}
       <div className="shared-cd-cta">
         <p>Want to create your own virtual CDs?</p>
         <a href="/" className="button button-secondary">
@@ -241,7 +239,6 @@ export function SharedCDView() {
         </a>
       </div>
 
-      {/* File preview modal */}
       {previewFile && (
         <FilePreviewModal
           file={previewFile}

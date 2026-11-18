@@ -34,6 +34,28 @@ const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
  * @returns Promise resolving to the EmailLog entry
  * @throws {Error} If email sending fails
  */
+function getEmailErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  if (typeof error === 'string' && error.trim()) {
+    return error;
+  }
+  if (error && typeof error === 'object') {
+    const maybe = error as { text?: string; message?: string; status?: number | string };
+    if (maybe.text) {
+      return maybe.text;
+    }
+    if (maybe.message) {
+      return maybe.message;
+    }
+    if (maybe.status != null) {
+      return `Email service error (${maybe.status})`;
+    }
+  }
+  return 'Failed to send email. Please try copying the share link instead.';
+}
+
 export async function sendShareEmail(
   recipientEmail: string,
   shareLink: string,
@@ -43,9 +65,21 @@ export async function sendShareEmail(
   cdId: string,
   customMessage?: string
 ): Promise<EmailLog> {
+  if (
+    !EMAILJS_SERVICE_ID ||
+    !EMAILJS_TEMPLATE_ID ||
+    !EMAILJS_PUBLIC_KEY ||
+    EMAILJS_SERVICE_ID.startsWith('your_') ||
+    EMAILJS_TEMPLATE_ID.startsWith('your_') ||
+    EMAILJS_PUBLIC_KEY.startsWith('your_')
+  ) {
+    throw new Error(
+      'Email sharing is not configured. Please copy the share link instead, or ask the site owner to set up EmailJS.'
+    );
+  }
+
   const subject = `${senderEmail} shared a CD with you: ${cdName}`;
-  
-  // Create initial log entry with pending status
+
   const emailLogData: EmailLogData = {
     userId,
     recipientEmail,
@@ -54,14 +88,12 @@ export async function sendShareEmail(
     cdName,
     status: 'pending',
   };
-  
-  let emailLog: EmailLog;
-  
+
+  let emailLog: EmailLog | undefined;
+
   try {
-    // Log the email attempt
     emailLog = await logEmail(emailLogData);
-    
-    // Prepare email template parameters
+
     const defaultMessage = `${senderEmail} has shared a CD with you called "${cdName}". Click the link below to view and download the files.`;
     const templateParams = {
       to_email: recipientEmail,
@@ -74,50 +106,41 @@ export async function sendShareEmail(
       custom_message: customMessage || '',
       has_custom_message: !!customMessage,
     };
-    
-    // Send email using EmailJS
+
     await emailjs.send(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       templateParams,
       EMAILJS_PUBLIC_KEY
     );
-    
-    // Update log entry to sent status
+
     const logRef = doc(db, COLLECTIONS.EMAIL_LOGS, emailLog.id);
     await setDoc(logRef, {
       ...emailLogData,
       status: 'sent',
       sentAt: Timestamp.now(),
     });
-    
+
     return {
       ...emailLog,
       status: 'sent',
     };
   } catch (error) {
     console.error('Error sending share email:', error);
-    
-    // Update log entry to failed status with error message
-    if (emailLog!) {
+    const errorMessage = getEmailErrorMessage(error);
+
+    if (emailLog) {
       const logRef = doc(db, COLLECTIONS.EMAIL_LOGS, emailLog.id);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
       await setDoc(logRef, {
         ...emailLogData,
         status: 'failed',
         error: errorMessage,
         sentAt: Timestamp.now(),
       });
-      
-      return {
-        ...emailLog,
-        status: 'failed',
-        error: errorMessage,
-      };
     }
-    
-    throw error;
+
+    // Always throw so the UI does not show a false success
+    throw new Error(errorMessage);
   }
 }
 
